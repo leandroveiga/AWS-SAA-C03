@@ -24,17 +24,69 @@ Um Load Balancer é um dispositivo ou serviço que distribui o tráfego de rede 
 
 **Exemplo:** Quando um usuário acessa um site, o Load Balancer decide para qual servidor a solicitação deve ser direcionada com base em métricas de saúde e algoritmos de balanceamento.
 
-## Tipos de Load Balancers
+## Tipos de Load Balancers (Atual 2025)
 
-Existem vários tipos de Load Balancers na AWS:
+| Tipo | Camada | Casos de Uso | Extras |
+|------|--------|--------------|--------|
+| Application Load Balancer (ALB) | L7 (HTTP/HTTPS/WebSocket/HTTP2/gRPC) | Apps web, microserviços, path/host routing | Regras avançadas, header/query, WAF, auth OIDC, fixed/weighted target routing |
+| Network Load Balancer (NLB) | L4 (TCP/UDP/TLS) | Alta performance, baixa latência, milhões de conexões | Static IP / Elastic IP, TLS pass-through/termination, zonal health |
+| Gateway Load Balancer (GWLB) | Encapsula tráfego (GENEVE) | Inserção transparente de appliances (firewalls, IDS) | Escala horizontal chain de inspeção |
+| Classic (CLB) | (LEGADO) | Evitar em novas arquiteturas | Migrar para ALB/NLB |
 
-- **Classic Load Balancer:** Um balanceador de carga tradicional que distribui o tráfego entre instâncias EC2.
+### Cross-Zone Load Balancing
+- ALB: Sempre ativado (sem cobrança extra).
+- NLB: Opcional (custo de LCU adicional). Se desativado, preserva proporção por AZ.
 
-- **Application Load Balancer (ALB):** Um balanceador de carga de camada de aplicação que opera no nível de aplicação e é altamente flexível.
+### Target Groups
+- Tipos: Instance, IP, Lambda, Application Load Balancer (chaining em cenários limitados).
+- Health check por target group (HTTP codes custom, healthy threshold, path).
 
-- **Network Load Balancer (NLB):** Um balanceador de carga de camada de transporte que é adequado para aplicativos que lidam com tráfego TCP/UDP.
+### Stickiness
+- ALB cookie gerenciado (app_lb cookie) ou cookie baseado em aplicação.
+- NLB: Source IP stickiness.
 
-**Exemplo:** Se você está executando uma aplicação web com várias camadas, pode optar por um Application Load Balancer (ALB) para rotear o tráfego com base em regras de camada de aplicação.
+### Segurança
+- WAF somente integrado nativamente ao ALB/CloudFront/APIGW (não ao NLB diretamente).
+- TLS Offload em ALB: usar certs ACM + segurança (policies TLS) >= TLS1.2.
+
+---
+## Auto Scaling (EC2 Auto Scaling & Application Auto Scaling)
+
+### Conceitos
+- Group: coleção lógica de instâncias.
+- Launch Template (preferido) vs Launch Configuration (legacy, evitar em novas implantações).
+- Desired / Min / Max capacity.
+
+### Políticas de Scaling
+| Tipo | Uso | Descrição |
+|------|-----|-----------|
+| Target Tracking | Manter métrica alvo (ex. 50% CPU) | Auto-ajuste proporcional |
+| Step Scaling | Respostas escalonadas a alarmes | Granular em picos previsíveis |
+| Simple (Legacy) | Ação única por alarme | Evitar novas | 
+| Scheduled | Cargas previsíveis (horário comercial) | Ajuste programado |
+| Predictive | Machine learning (padrões históricos) | Cargas sazonais |
+
+### Warm Pools
+Mantêm instâncias pré-inicializadas reduzindo cold start em bursts.
+
+### Instance Refresh
+Permite rolling update automático (ex.: nova AMI) com controle de taxa e health checks.
+
+### Scale-In Protection
+Evita que instâncias específicas sejam encerradas durante eventos de scale-in (uso temporário: debugging/migração).
+
+### Métricas e Otimização
+- Usar métricas compostas (ALB RequestCountPerTarget) para dimensionar horizontalmente camadas HTTP.
+- CPU média não reflete sempre saturação (latência p95 pode ser melhor alvo via CloudWatch metric math + target tracking custom via Application Auto Scaling + custom metric).
+
+### Perguntas Típicas
+1. Rotear tráfego por path /images/ e /api/ → ALB com regras path.
+2. Necessário endereço IP fixo + milhões de conexões TCP → NLB.
+3. Inserir firewall de terceiros em fluxo de tráfego escalável → Gateway Load Balancer.
+4. Diminuir cold start ao aumentar repentino de tráfego → Warm Pool.
+5. Evitar dependência de Launch Configuration legado → Migrar para Launch Template.
+
+---
 
 ## Auto Scaling com Application Load Balancer (ALB)
 
@@ -47,6 +99,33 @@ Esses tópicos abrangem os fundamentos dos Load Balancers e como eles são usado
 # Route53
 
 O **Route53** é um serviço de DNS (Domain Name System) oferecido pela AWS (Amazon Web Services). Ele permite que você registre e gerencie nomes de domínio, como exemplo.com, e associe esses nomes a recursos da AWS, como instâncias EC2, balanceadores de carga, buckets do S3, entre outros.
+
+### Políticas de Roteamento (Exame)
+- Simple
+- Weighted
+- Latency-Based
+- Failover (Primary / Secondary com health checks)
+- Geolocation
+- Geoproximity (Traffic Flow) – pode usar bias
+- Multi-Value Answer (até 8 registros healthy – pseudo load balance)
+- IP-based (endereçar ranges específicos)
+
+### Health Checks
+- Podem monitorar endpoint HTTP/HTTPS/TCP, integrar CloudWatch Alarms e influenciar failover.
+
+### Private Hosted Zones
+- Resolução interna para VPCs. Associar múltiplas VPCs (mesma ou diferentes contas via RAM + autorização).
+
+### Resolver Endpoints
+- Inbound: permitir on-prem → resolver DNS privado de VPC.
+- Outbound: resolver nomes on-prem a partir da VPC (rules condicionais).
+- DNS Firewall: bloquear domínios maliciosos (lista gerenciada + custom). 
+
+### Perguntas Típicas
+1. Direcionar usuários à região mais próxima → Latency policy.
+2. Controlar gradualmente rollout 10/90 → Weighted policy.
+3. DR ativo-passivo → Failover + health check.
+4. Bloquear exfiltração DNS → DNS Firewall.
 
 ## Principais recursos do Route53
 

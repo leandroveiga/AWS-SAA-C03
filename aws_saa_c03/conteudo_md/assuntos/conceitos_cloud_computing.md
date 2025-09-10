@@ -154,3 +154,57 @@ A gestão dos recursos em nuvem é geralmente centralizada, facilitando a admini
 
 - **Revisão Regular**:
     - As responsabilidades devem ser revisadas regularmente para garantir a segurança contínua na nuvem AWS.
+
+---
+## AWS Well-Architected Framework (6 + 1 Pilares)
+| Pilar | Objetivo | Pergunta Exemplo |
+|-------|----------|------------------|
+| Excelência Operacional | Executar, monitorar e melhorar processos | Como você automatiza mudanças? |
+| Segurança | Proteger dados e sistemas | Como você gerencia identidades? |
+| Confiabilidade | Recuperar de falhas e atender demanda | Como lida com quotas / backups? |
+| Eficiência de Performance | Uso eficiente de recursos de TI | Qual baseline de métricas? |
+| Otimização de Custos | Evitar gastos desnecessários | Como monitora anomalias de custo? |
+| Sustentabilidade | Minimizar impacto ambiental | Otimizou utilização e ciclo de vida? |
+| (Transversal) Escalabilidade Organizacional | Governança multi-conta | Como padroniza guard rails? |
+
+### Ferramentas Relacionadas
+- Well-Architected Tool (console) para revisões e relatórios de riscos (HRIs).
+
+---
+## Custos & FinOps Básico
+| Área | Ferramenta | Função |
+|------|-----------|--------|
+| Visibilidade | Cost Explorer | Tendências / filtros |
+| Alertas | AWS Budgets | Alertas de custo/uso/RIs |
+| Otimização | Compute Optimizer | Recomendação de rightsizing |
+| Atribuição | Cost & Usage Report (CUR) | Dados granulares para BI |
+| Compromisso | Savings Plans vs RIs | Redução custo compute |
+| Redução Spot | EC2 Spot / Spot Advisor | Oportunidade de economia |
+| Multi-Conta | Billing Consolidado (Organizations) | Unificação faturas |
+
+### Estratégias
+- Tagging / Cost Allocation Tags obrigatórias (ex.: owner, environment, cost-center).
+- Rightsizing periódico (CPU baixa / IOPS ocioso).
+- S3 Lifecycle / Glacier / Intelligent-Tiering para dados frios.
+- Escolha de Savings Plans (Compute SP para flexibilidade, EC2 SP para foco específico família/região).
+
+---
+## DR (Disaster Recovery) – Modelos
+| Modelo | Custo | RTO | RPO | Descrição |
+|--------|------|-----|-----|-----------|
+| Backup & Restore | Muito baixo | Horas | Horas | Backups/snapshots + restore manual |
+| Pilot Light | Baixo | <Horas | Minutos | Componentes core sempre ligados, resto escala após incidente |
+| Warm Standby | Médio | Minutos | Minutos | Stack reduzida ativa, escala horizontal no desastre |
+| Multi-Site / Active-Active | Alto | Segundos | Quase zero | Tráfego simultâneo em múltiplas regiões |
+
+### Seleção
+- Regulatório crítico → Active-Active.
+- Aplicação interna não crítica → Backup & Restore.
+
+---
+## Observabilidade
+- CloudWatch (Metrics / Logs / Alarms / Logs Insights / Synthetics / Evidently)
+- X-Ray (trace distribuído)
+- CloudWatch RUM (front-end)
+- OpenTelemetry suportado em vários serviços.
+

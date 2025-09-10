@@ -48,6 +48,84 @@ Ao lançar instâncias EC2 em sua VPC, você tem controle total sobre como elas 
 
 Em resumo, uma VPC na AWS é a base para criar ambientes de nuvem seguros e altamente personalizáveis, permitindo que você defina sua própria infraestrutura de rede e regras de segurança de acordo com as necessidades do seu aplicativo ou organização.
 
+---
+## Visão Atualizada (SAA-C03 2025)
+Adicionar novos componentes requeridos no exame:
+
+| Componente | Finalidade | Observações |
+|------------|-----------|-------------|
+| Transit Gateway | Hub para conexão de múltiplas VPCs e on-premises | Substitui malha extensa de peering; suporta multicast; routable domains |
+| VPC Lattice | Malha de serviços layer 7 gerenciada | Controle de acesso e observabilidade entre serviços (multi-VPC/contas) |
+| PrivateLink (Interface Endpoint) | Acesso privado a serviços (AWS/third-party) | Cria ENIs privados; não expõe rota pública |
+| Gateway Endpoint | Acesso privado a S3/DynamoDB | Usa rota na tabela; sem ENI |
+| Network Firewall | Firewall stateful gerenciado | Regras Suricata, IDS/IPS |
+| Verified Access | Acesso seguro Zero Trust a apps privados | Alternativa moderna a VPN para web apps |
+| IPv6 | Endereçamento 128 bits | Blocos /56 alocados a VPC; sub-rede = /64 |
+| Egress-Only IGW | Saída IPv6 sem entrada | Analogia a NAT para IPv6 outbound-only |
+| Flow Logs | Logs de tráfego ENI/Subnet/VPC | Envio para CloudWatch ou S3 |
+
+### NAT Gateway vs NAT Instance
+| Aspecto | NAT Gateway | NAT Instance |
+|---------|-------------|-------------|
+| Gerenciamento | Totalmente gerenciado | Auto-gerenciado, precisa patch/hardening |
+| Performance | Escala horizontal transparente | Limitado ao tipo da instância |
+| Alta Disponibilidade | AZ-scoped (criar 1 por AZ) | Necessita scripts/failover |
+| Segurança | Security Group não aplicável diretamente | Pode anexar SG |
+| Uso Típico | Padrão | Casos especiais (port forwarding custom / custo muito baixo em labs) |
+
+### Boas Práticas de Subnetting
+- Separar sub-redes por camada (web / app / data) e por AZ para HA.
+- Atribuir blocos não sobrepostos (planejar CIDRs antecipadamente pensando em expansão e Transit Gateway).
+- Para IPv6, sempre /64 por sub-rede (fixo pelo design).
+
+### Segurança Comparativa
+| Item | Security Group | NACL |
+|------|---------------|------|
+| Tipo | Stateful | Stateless |
+| Escopo | ENI/Instância | Subnet | 
+| Regras de retorno | Implícitas | Precisam ser replicadas entrada/saída |
+| Uso típico | Controle fino de porta/protocolo por workload | Bloqueios amplos / lista de negação / compliance |
+
+### Fluxo de Análise de Conectividade
+1. Rota existe na tabela da sub-rede?
+2. SG permite tráfego (in/out)?
+3. NACL não bloqueia?
+4. Endpoint/VPC Lattice/PrivateLink está configurado?
+5. DNS (Resolver endpoints / condicional) está correto?
+
+### Transit Gateway vs Peering
+- Peering: simples, sem transitive routing, ideal poucos pares.
+- Transit Gateway: escalável (milhares de attachments), suporta políticas centralizadas.
+
+### VPC Lattice (Exame)
+Simplifica comunicação service-to-service com autenticação, autorização e observabilidade. Elimina necessidade de mesh custom em múltiplas VPCs sem sidecars.
+
+### PrivateLink
+Para acessar serviço exposto como Network Load Balancer ou supported AWS service sem cruzar Internet/NAT. Reduz superfície de ataque e latência.
+
+### DNS Interno / Resolver
+- Resolver Inbound/Outbound endpoints permitem resolução híbrida on-premises ↔ VPC.
+- DNS Firewall para bloquear domínios maliciosos.
+
+### Estratégias de Saída
+- IPv4 privado → NAT Gateway → Internet.
+- IPv6 → Egress-Only Internet Gateway.
+- Acesso controlado a S3/DynamoDB → Gateway Endpoint (economiza NAT e acelera).
+
+### Observabilidade
+- Flow Logs (Subrede/ENI/VPC) + CloudWatch Logs Insights.
+- Mirror Tráfego (VPC Traffic Mirroring) para inspeção profunda.
+
+### Checklist de Prova
+- Conectividade multi-VPC complexa → Transit Gateway.
+- Acesso privado a serviço SaaS → PrivateLink.
+- Minimizar custo NAT + acessar S3 → Gateway Endpoint.
+- Necessário segmentar acesso Layer7 entre microserviços multi-conta → VPC Lattice.
+- Bloquear exfiltração DNS → DNS Firewall.
+- Requisito somente saída IPv6 → Egress-Only IGW.
+
+---
+
 # Segmentação e Conectividade
 
 A segmentação e conectividade em uma Amazon Virtual Private Cloud (VPC) são fundamentais para criar ambientes de nuvem robustos e altamente configuráveis.
@@ -148,11 +226,19 @@ Os Security Groups são como firewalls virtuais que controlam o tráfego de entr
 
 **Exemplo:** Ao configurar um Security Group para suas instâncias web, você pode permitir apenas o tráfego nas portas 80 (HTTP) e 443 (HTTPS) para que os visitantes acessem seu site, enquanto bloqueia todas as outras portas.
 
+#### Dicas Modernas
+- Referencie SG em outra regra (SG-to-SG) para comunicação dinâmica.
+- Evite 0.0.0.0/0 em portas administrativas (use Systems Manager Session Manager / Verified Access / bastion temporário automatizado).
+
 ### **Network Access Control Lists (NACLs)**
 
 As Network Access Control Lists (NACLs) são conjuntos de regras de controle de acesso de nível de rede para o tráfego de entrada e saída de sub-redes. Elas funcionam como uma camada adicional de segurança, permitindo definir políticas de segurança em um nível mais amplo.
 
 **Exemplo:** Ao configurar NACLs, você pode bloquear tráfego indesejado, como tráfego malicioso ou não autorizado, impedindo que ele atinja suas sub-redes, independentemente das regras de segurança internas das instâncias.
+
+#### Padrões
+- Default NACL: permissivo (allow all). Harden criando NACL custom.
+- Atenção a ephemeral ports (1024-65535) em respostas – se bloquear, quebra retornos.
 
 # Gerenciamento de Tráfego
 
@@ -170,6 +256,10 @@ Os NAT (Network Address Translation) Gateways ou Instâncias permitem que as ins
 
 **Exemplo:** Instâncias de banco de dados em uma sub-rede privada podem usar um NAT Gateway para acessar atualizações de software de repositórios externos de forma segura, protegendo os dados confidenciais da exposição à Internet.
 
+#### Custos & Otimização
+- Tráfego para S3/DynamoDB: usar Gateway Endpoint para evitar cobranças de NAT.
+- Consolidar NAT por AZ (resiliência) – não compartilhar entre AZs (rota cruzada = single point of failure).
+
 ### **Stateful e Stateless**
 
 O controle de tráfego em uma VPC pode ser stateful ou stateless. Stateful refere-se a sistemas que mantêm informações sobre o estado da conexão, enquanto stateless não mantém informações sobre conexões anteriores.
@@ -177,6 +267,16 @@ O controle de tráfego em uma VPC pode ser stateful ou stateless. Stateful refer
 **Exemplo:** Os Security Groups na VPC são stateful, o que significa que, se você permitir o tráfego de saída de uma instância, ele permitirá automaticamente o tráfego de retorno relacionado, simplificando o gerenciamento de regras.
 
 Estes exemplos ilustram como os Security Groups, NACLs, Elastic IPs, NAT Gateways/Instances e o conceito de stateful e stateless são fundamentais para o controle de acesso e o gerenciamento de tráfego em uma VPC.
+
+---
+## Exemplos de Questões (Raciocínio)
+1. Precisa conectar 300 VPCs + 2 datacenters → Transit Gateway (não VPC peering full mesh).
+2. Serviço SaaS privado precisa ser consumido sem Internet → PrivateLink (Interface Endpoint).
+3. Minimizar custos de saída para acessar DynamoDB de sub-rede privada → Gateway Endpoint.
+4. Microserviços multi-conta necessitam autorização centralizada L7 → VPC Lattice.
+5. Somente IPv6 saída permitido → Egress-Only IGW.
+
+---
 
 # Conexões Dedicadas
 

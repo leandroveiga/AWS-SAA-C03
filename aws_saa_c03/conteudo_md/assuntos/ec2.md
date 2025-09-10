@@ -183,26 +183,62 @@ Se uma instância é terminada, ela entra no estado "Terminated" (Desligada). Is
 
 Alguns tipos de instâncias EC2 suportam o estado de hibernação. Quando uma instância é colocada em hibernação, o estado da memória da instância é salvo em disco e a instância pode ser retomada exatamente do ponto em que parou após um desligamento. Durante a hibernação e retomada, as permissões do IAM podem ser aplicadas para controlar o acesso aos recursos e serviços da AWS, dependendo do estado em que a instância se encontra.
 
-##  Grupo de Posicionamento EC2 na AWS (Estratégias de Posicionamento)
+## Estratégias de Posicionamento (Placement Groups) – Correção Conceitual
+Placement Group NÃO é Auto Scaling Group. São mecanismos para influenciar alocação física em nível de rede/host.
 
-Os Grupos de Posicionamento EC2 (Auto Scaling Groups - ASG) na Amazon Web Services (AWS) permitem que você gerencie a escalabilidade automática das suas instâncias EC2. Uma parte importante do controle de como as instâncias são distribuídas dentro do grupo é a escolha da estratégia de posicionamento. Existem três estratégias comuns:
+| Tipo | Objetivo | Caso de Uso |
+|------|----------|-------------|
+| Cluster | Baixa latência / Alta largura de banda (mesmo rack) | HPC, workloads com alto tráfego leste-oeste |
+| Spread | Alta resiliência (cada instância em hardware distinto) | Instâncias críticas pequenas (máx. 7 por AZ) |
+| Partition | Isolamento em partições físicas (grupos de racks) | Grandes clusters distribuídos (Hadoop, Kafka) |
 
-### 1. "Cluster" (Agrupamento)
+## Nitro System
+- Hypervisor leve + hardware dedicado offload (EBS, rede, segurança) → maior performance e menor overhead.
+- Suporte a *ENA* (Elastic Network Adapter) e *EFA* (Elastic Fabric Adapter) para HPC/MPI.
 
-- **Objetivo:** A estratégia "Cluster" visa agrupar instâncias em um mesmo grupo para maximizar a densidade de instâncias em hosts físicos.
-- **Utilização:** É útil quando você deseja garantir que várias instâncias do seu grupo sejam colocadas fisicamente próximas umas das outras.
-- **Benefícios:** Pode ser importante para aplicativos que exigem baixa latência ou que se beneficiam da proximidade física das instâncias.
+## Tipos Principais de Família
+| Família | Foco | Exemplo |
+|---------|------|---------|
+| General Purpose | Balanceado | t4g, m7g, m6i |
+| Compute Optimized | CPU intensivo | c7g, c6i |
+| Memory Optimized | Banco de dados in-memory | r7g, x2idn |
+| Storage Optimized | Alta IOPS / throughput disco local | i4i, im4gn, d3 |
+| Accelerated Computing | GPU / FPGA | p5, g6, inferentia (inf2), trainium (trn1) |
 
-### 2. "Spread" (Distribuição Uniforme)
+## Opções de Compra / Capacidade
+| Opção | Uso | Observações |
+|-------|-----|-------------|
+| On-Demand | Uso imprevisível | Sem compromisso |
+| Savings Plans | Uso contínuo (Compute/EC2) | Mais flexível que RI, compromisso $/h |
+| Reserved Instances | Workloads estáveis | Standard (maior desconto) / Convertible |
+| Spot | Tolerante a interrupção | Interrupção (2 min aviso); use diversificação + fleets |
+| Capacity Reservation | Garante capacidade AZ | Pode combinar com SP/RIs |
+| Dedicated Host | Compliance/licensing BYOL | Visibilidade física |
 
-- **Objetivo:** A estratégia "Spread" visa distribuir instâncias uniformemente em várias zonas de disponibilidade (AZs) para melhorar a resiliência contra falhas de uma única AZ.
-- **Utilização:** É útil quando você deseja alta disponibilidade e redundância, garantindo que as instâncias não estejam todas na mesma AZ.
-- **Funcionamento:** Cada instância é colocada em uma AZ diferente, proporcionando maior isolamento.
+## Instance Store vs EBS
+| Aspecto | Instance Store | EBS |
+|---------|----------------|-----|
+| Persistência | Some ao stop/terminate | Persistente |
+| Performance | Altíssima (NVMe local) | Alta (provisionável) |
+| Uso Típico | Cache, buffer temporário | Dados transacionais, boot |
 
-### 3. "Partition" (Partição)
+## Hibernação
+- Salva RAM em EBS (criptografado) e retoma rápido. Limites: tipos suportados, <=150 GB RAM, encr. obrigatório para dados sensíveis.
 
-- **Objetivo:** A estratégia "Partition" permite que você defina partições de instâncias com base em critérios específicos, como tags.
-- **Utilização:** É útil quando você deseja criar grupos de instâncias com base em características comuns, como aplicativos, clientes ou ambientes.
-- **Benefícios:** Isso permite um controle granular sobre como as instâncias são distribuídas, tornando a gestão mais eficiente.
+## Interrupção Spot – Estratégias
+- Checar *Instance Rebalance Recommendation* para migrar antecipadamente.
+- Usar *capacity-optimized* allocation strategy.
 
-Ao escolher a estratégia de posicionamento para o seu Grupo de Posicionamento EC2, leve em consideração os requisitos específicos do seu aplicativo, como latência, alta disponibilidade e necessidades de isolamento. Cada estratégia pode ser apropriada para diferentes casos de uso, e a escolha certa pode melhorar o desempenho e a confiabilidade do seu ambiente na AWS.
+## User Data & Metadata
+- Metadata v2 (IMDSv2) obrigatório para mitigar SSRF.
+
+## Observabilidade
+- CloudWatch Metrics (CPU, Network, Status Checks), Agent para SO metrics, CloudWatch Logs, AWS Systems Manager.
+
+## Checklist de Prova EC2
+- Necessidade de baixa latência HPC → Placement Group Cluster + EFA.
+- Licenças específicas (Windows BYOL) → Dedicated Host.
+- Minimizar custo para tarefa batch sem SLA estrito → Spot + diversificação.
+- Garantir capacidade em horário crítico → Capacity Reservation.
+- Recuperar instância após hardware failure mantendo IP/EBS → Stop/Start ou usar Auto Scaling + health checks.
+

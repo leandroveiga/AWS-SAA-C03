@@ -93,3 +93,35 @@ O Lambda Edge também pode ser usado para adicionar autenticação e autorizaç�
 Outro exemplo de uso do Lambda Edge é a otimização de imagens. Você pode usar o serviço para redimensionar, comprimir ou converter imagens de acordo com as necessidades do dispositivo do usuário. Isso ajuda a melhorar o desempenho do seu site ou aplicativo, garantindo que as imagens sejam entregues de forma otimizada para cada dispositivo.
 
 Esses são apenas alguns exemplos de como o Lambda Edge pode ser usado para adicionar funcionalidades personalizadas às suas distribuições do CloudFront. Com o Lambda Edge, você tem a flexibilidade de executar código personalizado nos pontos de presença da CloudFront, permitindo que você crie soluções mais eficientes e personalizadas para seus usuários.
+
+---
+## Atualizações de Performance & Global Networking (Exame)
+
+### Route53 – Recap + Políticas (Ver também arquivo de Load Balancer)
+- Weighted vs Latency vs Geolocation vs Geoproximity vs Multi-Value vs Failover.
+- Health checks podem acionar failover e avaliar dependências (Chain).
+
+### CloudFront – Recursos Modernos
+| Recurso | Finalidade |
+|---------|-----------|
+| Origin Access Control (OAC) | Acesso seguro a S3 substitui OAI |
+| Origin Shield | Cache central adicional reduz chamadas de origem |
+| Signed URLs/Cookies | Controle de acesso temporário a conteúdo privado |
+| Field-Level Encryption | Criptografar campos sensíveis em formulário |
+| HTTP/3 & QUIC | Latência reduzida em redes de alto RTT |
+| Lambda@Edge / CloudFront Functions | Manipulação request/response (Functions = ultra low-latency, restrições maiores) |
+
+### Global Accelerator
+- Acelera tráfego TCP/UDP de apps não cacheáveis (jogos, VoIP, APIs) usando rede edge AWS + Anycast IPs.
+- Diferente de CloudFront (camada aplicação HTTP caching), GA otimiza rota de rede.
+
+### Caching Strategy – Padrões
+- Definir TTL apropriado (cache-control, expires).
+- Invalidation com parcimônia (custo) – usar versionamento via path/hash.
+- Compressão (Gzip/Brotli) + otimização de objetos.
+
+### Perguntas Típicas
+1. Conteúdo dinâmico não cacheável precisa baixa latência global → Global Accelerator.
+2. Restringir direto acesso a bucket S3 atrás de CDN → CloudFront + OAC.
+3. Reduzir origem sobrecarregada por múltiplos edge POPs → Origin Shield.
+4. Controlar acesso temporário a vídeo pago → Signed URL.

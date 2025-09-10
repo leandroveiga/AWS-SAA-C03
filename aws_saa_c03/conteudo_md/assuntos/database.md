@@ -1,4 +1,4 @@
-# DataBase AWS
+# Bancos de Dados na AWS (Atualizado SAA-C03 2025)
 
 ## Multi-AZ e Read Replica
 
@@ -209,8 +209,8 @@ O **Amazon Redshift** é um serviço de armazenamento de dados gerenciado que of
 - **Compressão de Dados**: Utiliza compressão avançada para economizar espaço de armazenamento e acelerar as consultas.
 
 - **Arquitetura Massivamente Paralela (MPP)**: O Redshift utiliza uma arquitetura MPP que divide as tarefas de consulta em várias unidades de processamento, acelerando o desempenho das consultas.
-
-- **Não é Multi-AZ**: Diferentemente de alguns outros serviços da AWS, o Redshift não é nativamente multi-AZ. No entanto, você pode configurar um ambiente de recuperação de desastres (DR) manualmente.
+ 
+> Observação: Clusters RA3 e Redshift Serverless suportam recursos de resiliência avançada, incluindo cross-AZ dentro da região (Multi-AZ para melhor disponibilidade) e snapshots automáticos multi-região (quando configurados). A antiga limitação de "não é Multi-AZ" aplica-se a modelos legados.
 
 ### Data Warehousing
 
@@ -281,4 +281,136 @@ O Amazon Aurora foi projetado para alta disponibilidade, com a replicação de d
 ### Segurança
 
 O Aurora oferece recursos avançados de segurança, incluindo criptografia de dados em repouso e em trânsito. Ele também integra-se ao AWS Identity and Access Management (IAM) para controle de acesso refinado.
+
+---
+## Atualizações & Serviços Adicionais (Foco de Prova)
+
+### Aurora Serverless v2
+- Escala granular (capacidade elástica automática ACU) praticamente em tempo real; ideal para workloads com picos imprevisíveis.
+
+### Aurora Global Database
+- Replicação cross-region <1s lag típico; para DR + leitura global.
+
+### Aurora Backtrack
+- Voltar cluster a ponto anterior em minutos (até 72h janela) sem restaurar snapshot completo.
+
+### RDS Proxy
+- Pool de conexões (MySQL/PostgreSQL/Aurora). Reduz overhead de connection storms (ex.: Lambda). Melhora failover.
+
+### DynamoDB (Recursos Essenciais Exame)
+| Recurso | Descrição | Uso |
+|---------|-----------|-----|
+| DAX | Cache in-memory fully managed | Reduz latência read (<ms) |
+| Global Tables v2 | Replicação multi-região ativa | Low-latency global + DR |
+| Streams | Fluxo de mudanças (near real-time) | Triggers Lambda / replicação custom |
+| TTL | Expira itens automaticamente | Sessões / limpeza |
+| PITR | Point-in-Time Recovery (últimas 35 dias) | Proteção contra deleção acidental |
+| PartiQL | SQL-like para DynamoDB | Facilidade de consulta | 
+
+### Consistência DynamoDB
+- Read eventual (default) vs strongly consistent (na mesma região); Global Tables sempre eventual cross-region.
+
+### Redshift (Novidades)
+- RA3: separa compute x storage (managed storage). Multi-AZ com RA3 (2024+). 
+- Redshift Serverless: paga por RPU hora; ideal workloads esporádicos.
+- AQU (Advanced Query Accelerator) & Result cache.
+- Data Sharing entre namespaces/clusters.
+
+### Outros Serviços a Conhecer
+| Serviço | Tipo | Caso de Uso |
+|---------|------|-------------|
+| Neptune | Grafo (Property + RDF/SPARQL) | Redes sociais, fraude |
+| DocumentDB | Document (Mongo-compatible API) | Migração parcial de workloads Mongo |
+| Keyspaces | Cassandra API | Workloads Cassandra gerenciado |
+| MemoryDB for Redis | Redis com durabilidade multi-AZ | Sessões críticas / state store |
+| Timestream | Time-series | IoT, métricas |
+| QLDB | Ledger imutável criptograficamente | Rastreamento de transações (audit) |
+
+### Caching Estratégico
+- ElastiCache (Redis) para ranking, sessões, contadores atômicos.
+- ElastiCache Memcached para sharding simples + cache de objeto.
+
+### DR & Alta Disponibilidade – Padrões
+| Necessidade | Padrão |
+|-------------|--------|
+| RPO≈0 & RTO baixo | Multi-AZ (RDS/Aurora) |
+| Escala leitura sem impacto write | Read Replicas |
+| DR cross-region rápido | Global Database (Aurora) / Global Tables (DynamoDB) |
+| Recuperar dados deletados acidentalmente | PITR (DynamoDB) / Backups automáticos |
+
+### Perguntas Típicas
+1. Latência leitura <1ms em tabela DynamoDB com picos → DAX.
+2. Failover automático sem perda de dados RDS → Multi-AZ (não confundir com Read Replica).
+3. Escalar somente leitura para relatórios → Read Replicas.
+4. Replicação global ativa para NoSQL → DynamoDB Global Tables.
+5. Reduzir overhead de conexões por milhares de Lambdas → RDS Proxy.
+
+---
+## Panorama de Serviços e Capacidades (Resumo 2025)
+Valores típicos públicos. Podem variar por região/atualização. Sempre validar na documentação oficial.
+
+| Serviço | Categoria | Capacidade / Escala Principal | Limites-Chave | Observações |
+|---------|-----------|-------------------------------|---------------|-------------|
+| RDS (MySQL/PostgreSQL/MariaDB/Oracle/SQL Server) | Relacional OLTP | Até 128 TiB por instância (gp3/io1) | Até 15 Read Replicas (varia engine) | Multi-AZ sincrono; IOPS até 256K+ (gp3/io1) |
+| Amazon Aurora (MySQL/PostgreSQL compat.) | Relacional OLTP | Storage elástico até 128 TiB (cluster) | 15 réplicas, 5 regiões secundárias (Global DB) | Backtrack (até 72h), Serverless v2 (ACUs) |
+| Amazon Aurora Global Database | Relacional Global | 1 primária + até 5 regiões secundárias | Lag <1s típico | Failover cross-region (DR) |
+| Amazon Redshift (RA3) | Data Warehouse | Vários PB comprimidos (Managed Storage) | Concurrency scaling sob demanda | RA3 com Multi-AZ / Serverless para cargas esporádicas |
+| Redshift Serverless | Data Warehouse | Escala automática PB | Armazenamento gerenciado | Cobra por RPU-hora |
+| DynamoDB | Chave-Valor / Documento | Tabela ilimitada (particiona) | Item ≤400 KB; 20 GSI (soft, pode mudar); LSI ≤5 | Global Tables multi-região ativa |
+| DynamoDB DAX | Cache DynamoDB | Escala horizontal clusters | Memória por nó (dependência instância) | Latência micro/milisegundo |
+| Amazon Keyspaces | Wide Column (Cassandra) | Tabela ilimitada | Linha ≤1 MB | On-demand ou provisionado |
+| Amazon DocumentDB | Documento (Mongo API) | Storage elástico até 128 TiB | Documento ≤16 MB | Até 15 réplicas |
+| Amazon Neptune | Grafo | Até 128 TiB storage | 15 réplicas leitura | Suporta Gremlin / SPARQL / openCypher |
+| Amazon QLDB | Ledger Imutável | Sem limite prático | Tamanho transação/documento prático (JSON ≤ ~128 KB recomendado) | Histórico criptograficamente verificável |
+| Amazon Timestream | Time Series | Escala automática (multi-tier) | Sem tamanho fixo; linhas removidas conforme política | Memory Store + Magnetic Store |
+| ElastiCache Redis (Cluster Mode Enabled) | In-Memory | Até 500 shards; nó ~ <635 GiB | 5 réplicas por shard | Centenas de TiB agregados |
+| ElastiCache Memcached | In-Memory | Até 100 nós | Tamanho depende instância | Sem replicação nativa (sharding) |
+| MemoryDB for Redis | In-Memory Durável | Até 500 shards | Shard ~500+ GiB (classe grande) | Multi-AZ com persistência |
+| OpenSearch Service | Busca / Analytics | Data node EBS até 24 TiB (gp3/io1) * nós | Documento JSON ≤ ~100 MB recomendado | PB lógicos via sharding |
+| OpenSearch Vector Search | Similaridade | Mesmo limites base | Vetor dimensão (dep. versão) | Embeddings p/ IA busca semântica |
+| Amazon Neptune Analytics (se habilitado) | Grafo analítico | Processa datasets multi-TiB | - | Complementar a Neptune core |
+| Amazon RDS Proxy | Conexões | Proxy escalável | Limites conexões por proxy (ajustáveis) | Reduz storms de conexão |
+| Amazon Glue Data Catalog (metastore) | Catálogo | Metadados milhões de objetos | Tabelas/partições quotas eleváveis | Não é DB de aplicação |
+
+### Limites Específicos Importantes
+- DynamoDB: Partição física ~10 GB antes de split; throughput por partição adaptativo; hot partition é risco de design de chave.
+- Aurora: Segmenta páginas de 10 GB; auto-expand; latência de replicação intra-cluster milissegundos.
+- Redshift: Result cache pode evitar scan; Spectrum lê dados no S3 sem mover para cluster.
+- OpenSearch: Ajustar shard count (excesso → overhead; falta → impossibilita escala futura).
+- MemoryDB vs ElastiCache Redis: MemoryDB prioriza durabilidade (multi-AZ write-ahead log), maior latência write que Redis puro.
+
+### Itens/Objetos Máximos (Referência Rápida)
+| Item | Limite |
+|------|--------|
+| DynamoDB Item | 400 KB (atributos + nomes + overhead) |
+| DocumentDB Documento | 16 MB (limite Mongo compat.) |
+| S3 Objeto (para integração de lakes) | 5 TB |
+| ElastiCache Key (Redis) | 512 MB valor (não recomendado próximo disso) |
+
+### Seleção Rápida (Heurística)
+| Requisito | Serviço Primário |
+|-----------|-----------------|
+| Alta taxa escrita key-value, escala imprevisível | DynamoDB |
+| Relacional escalável com failover rápido | Aurora |
+| DW analítico petabyte | Redshift |
+| Time Series IoT | Timestream |
+| Busca texto + agregações | OpenSearch |
+| Grafo relacionamento | Neptune |
+| Ledger auditável | QLDB |
+| Cache sub-ms / ranking | ElastiCache Redis |
+| Cassandra compat. gerenciado | Keyspaces |
+
+### Perguntas de Exame Ligadas a Capacidade
+1. Necessário petabytes analíticos + SQL → Redshift (RA3/Serverless) não Aurora.
+2. Latência leitura micro/milisegundos sub-ms para chave → DynamoDB + DAX.
+3. Crescimento imprevisível sem pré-provisionar partições → DynamoDB on-demand.
+4. Replicação global ativa write em múltiplas regiões relacional → Aurora Global (não RDS tradicional).
+5. Cache distribuído escalável com partição manual → ElastiCache Memcached.
+
+> Dica: Quando a pergunta enfatiza "tamanho ilimitado / escala automática sem administração de partição" tende a ser DynamoDB / Keyspaces / Timestream; quando enfatiza SQL transacional + alta disponibilidade → Aurora/RDS Multi-AZ.
+
+---
+## Próximos Passos
+Se quiser, podemos gerar um quadro comparativo de custos relativos ou adicionar fluxogramas de decisão (ex.: Aurora vs DynamoDB vs Redshift) em outro arquivo.
+
 
