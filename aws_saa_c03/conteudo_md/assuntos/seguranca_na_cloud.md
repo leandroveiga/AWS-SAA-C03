@@ -2,6 +2,8 @@
 
 A segurança na AWS é uma responsabilidade compartilhada e uma prioridade máxima. A AWS oferece um amplo conjunto de serviços para proteger dados, infraestrutura e aplicações contra ameaças.
 
+---
+
 ## 1. Modelo de Responsabilidade Compartilhada
 
 Este é o conceito mais fundamental da segurança na AWS.
@@ -64,6 +66,11 @@ O AWS KMS é um serviço gerenciado que facilita a criação e o controle das ch
         5.  A chave de dados criptografada é armazenada junto com os dados criptografados.
     -   Para descriptografar, o processo é o inverso: o serviço envia a chave de dados criptografada para o KMS, que a descriptografa usando a CMK e retorna a chave de dados em texto plano para o serviço descriptografar os dados.
 
+<p align="center">
+    <img alt="Hierarquia de chaves KMS" width="560" src="https://docs.aws.amazon.com/pt_br/kms/latest/developerguide/images/CMK-Hierarchy.png" />
+    <br/><em>Fonte: AWS KMS Developer Guide (Hierarquia de chaves)</em>
+</p>
+
 ## 5. AWS Inspector
 
 O Amazon Inspector é um serviço de gerenciamento de vulnerabilidades que verifica continuamente suas cargas de trabalho da AWS (instâncias EC2 e imagens de contêiner no ECR) em busca de vulnerabilidades de software e exposição não intencional à rede.
@@ -73,3 +80,5 @@ O Amazon Inspector é um serviço de gerenciamento de vulnerabilidades que verif
 -   **Inspector vs. WAF:**
     -   **Inspector:** É proativo. Ele olha para *dentro* da sua instância EC2 ou imagem de contêiner para encontrar vulnerabilidades no software *antes* que sejam exploradas.
     -   **WAF:** É reativo. Ele fica na *frente* da sua aplicação para bloquear ataques que tentam explorar vulnerabilidades.
+
+---

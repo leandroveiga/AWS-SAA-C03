@@ -19,12 +19,24 @@ O **RDS** é um serviço gerenciado que facilita a configuração, operação e 
 -   **Failover:** Se o banco de dados principal falhar, o RDS realiza um failover automático para a réplica em espera, minimizando o tempo de inatividade. A aplicação se reconecta usando o mesmo endpoint de conexão.
 -   **Importante:** A réplica standby **não pode** ser usada para servir tráfego de leitura. Seu único propósito é estar pronta para assumir em caso de falha.
 
+<p align="center">
+    <img src="https://docs.aws.amazon.com/pt_br/AmazonRDS/latest/UserGuide/images/con-multi-AZ.png" alt="Implantação RDS Multi-AZ com instância principal e standby" width="520" />
+    <br/>
+    <em>Fonte: Documentação oficial Amazon RDS</em>
+</p>
+
 #### Read Replicas (Réplicas de Leitura)
 -   **Propósito:** Escalabilidade de Leitura (melhorar a performance).
 -   **Como Funciona:** O RDS cria uma ou mais cópias **assíncronas** do banco de dados principal.
 -   **Uso:** Você pode direcionar as consultas de leitura (operações `SELECT`) da sua aplicação para as Read Replicas, reduzindo a carga no banco de dados principal e melhorando o desempenho geral.
 -   **Flexibilidade:** Read Replicas podem ser criadas em diferentes AZs ou até mesmo em diferentes Regiões (Cross-Region Read Replicas), o que também ajuda a reduzir a latência para usuários globais.
 -   **Promoção:** Uma Read Replica pode ser "promovida" para se tornar um banco de dados principal independente, se necessário.
+
+<p align="center">
+    <img src="https://docs.aws.amazon.com/pt_br/AmazonRDS/latest/UserGuide/images/read-replica-cross-region.png" alt="RDS Read Replicas incluindo replicação cross-region" width="560" />
+    <br/>
+    <em>Fonte: Documentação oficial Amazon RDS</em>
+</p>
 
 | Recurso | Propósito Principal | Replicação | Failover |
 | :--- | :--- | :--- | :--- |

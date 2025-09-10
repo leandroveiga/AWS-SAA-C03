@@ -32,7 +32,7 @@ O AWS DataSync é um serviço de transferência de dados online que simplifica, 
     -   **Automação:** Gerencia automaticamente a transferência, incluindo validação de integridade dos dados, agendamento de tarefas e monitoramento.
     -   **Como funciona:** Você implanta um "agente" do DataSync como uma máquina virtual em seu ambiente on-premises. Este agente se conecta aos seus sistemas de armazenamento e transfere os dados de forma segura e eficiente para a AWS.
 
-## 3. AWS Snow Family
+    ## 3. AWS Snow Family
 
 A Família AWS Snow é projetada para a transferência de dados em escala de petabytes (ou até exabytes) usando dispositivos físicos e seguros. É a solução ideal quando a transferência de dados pela internet não é viável devido ao tempo, custo ou limitações de largura de banda.
 
@@ -61,3 +61,8 @@ O AWS DMS é um serviço gerenciado que ajuda a migrar bancos de dados para a AW
         -   **Heterogênea:** Migração entre diferentes tipos de banco de dados (ex: Oracle on-premises para Amazon Aurora).
     -   **Schema Conversion Tool (SCT):** Para migrações heterogêneas, a SCT é usada em conjunto com o DMS. Ela converte o esquema do banco de dados de origem (tabelas, visões, stored procedures) para um formato compatível com o banco de dados de destino.
     -   **Replicação Contínua de Dados (Change Data Capture - CDC):** Após a carga inicial dos dados, o DMS pode replicar continuamente as alterações do banco de dados de origem para o de destino, permitindo uma transição (cutover) com tempo de inatividade mínimo.
+
+<p align="center">
+    <img alt="Fluxo de replicação AWS DMS" width="640" src="https://docs.aws.amazon.com/pt_br/dms/latest/userguide/images/datarep-Welcome.png" />
+    <br/><em>Fonte: AWS DMS User Guide</em>
+</p>

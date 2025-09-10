@@ -4,10 +4,18 @@ O **Amazon EC2** é um serviço web que fornece capacidade computacional segura 
 
 ---
 
+Nota: Uso de imagem diretamente hospedada em docs.aws.amazon.com conforme solicitado.
+
+Referência da imagem e conteúdo: Documentação oficial Amazon EC2 – https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/concepts.html
+
+---
+
 ## Componentes Fundamentais de uma Instância EC2
 
 -   **Amazon Machine Image (AMI):** É o modelo para sua instância. Uma AMI inclui um sistema operacional, um servidor de aplicação e aplicações. Você pode escolher AMIs fornecidas pela AWS, pela comunidade ou criar as suas próprias.
 -   **Tipos de Instância:** O EC2 oferece uma vasta variedade de tipos de instância otimizados para diferentes casos de uso (ex: computação geral, otimizada para computação, memória, armazenamento ou acelerada).
+    
+    <img alt="Tipos de instância EC2 - famílias" width="620" src="https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/images/instance-types.png" />
 -   **Armazenamento:**
     -   **Elastic Block Store (EBS):** Volumes de armazenamento em nível de bloco, persistentes e de alta performance, que podem ser anexados a uma instância. Pense neles como os "discos rígidos" da sua instância.
     -   **Instance Store:** Armazenamento temporário em nível de bloco localizado nos discos do servidor físico que hospeda a instância. Os dados em um instance store **são perdidos** quando a instância é parada, hibernada ou terminada.
@@ -44,6 +52,11 @@ Este é um tópico **extremamente importante** para o exame.
 -   **Running:** A instância está em execução e operacional. A cobrança começa.
 -   **Stopping/Stopped:** A instância está sendo desligada. Em estado *Stopped*, você não é cobrado pelo uso da instância, mas **é cobrado pelo armazenamento do volume EBS anexado**. Os dados no volume EBS são preservados.
 -   **Terminating/Terminated:** A instância está sendo permanentemente excluída. Todos os volumes EBS associados com a configuração "Delete on Termination" são excluídos. Os dados no *Instance Store* são sempre perdidos.
+
+<p align="center">
+    <img alt="Ciclo de vida da instância EC2" width="560" src="https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/images/instance_lifecycle.png" />
+    <br/><em>Fonte: AWS EC2 User Guide (Instance Lifecycle)</em>
+</p>
 
 ---
 

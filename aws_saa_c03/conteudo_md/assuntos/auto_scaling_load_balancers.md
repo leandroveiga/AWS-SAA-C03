@@ -8,6 +8,12 @@ Para construir uma arquitetura robusta na AWS, é essencial garantir que sua apl
 
 O **ELB** distribui automaticamente o tráfego de entrada de aplicações por múltiplos destinos, como instâncias Amazon EC2, contêineres, endereços IP e funções Lambda. Ele aumenta a disponibilidade e a tolerância a falhas de suas aplicações.
 
+<p align="center">
+    <img src="https://docs.aws.amazon.com/pt_br/elasticloadbalancing/latest/application/images/component_architecture.png" alt="Componentes de um Application Load Balancer: clientes, listeners, regras e grupos de destino" width="650" />
+    <br/>
+    <em>Fonte: Documentação oficial AWS Elastic Load Balancing</em>
+</p>
+
 ### Tipos de Load Balancers
 
 A escolha do tipo de load balancer é um ponto crucial no design da arquitetura.
@@ -38,6 +44,12 @@ A escolha do tipo de load balancer é um ponto crucial no design da arquitetura.
 ## EC2 Auto Scaling
 
 O **EC2 Auto Scaling** ajuda a garantir que você tenha o número correto de instâncias Amazon EC2 disponíveis para lidar com a carga de sua aplicação.
+
+<p align="center">
+    <img src="https://docs.aws.amazon.com/pt_br/autoscaling/ec2/userguide/images/asg-basic-arch.png" alt="Arquitetura básica de um Auto Scaling Group distribuindo instâncias em múltiplas zonas de disponibilidade" width="600" />
+    <br/>
+    <em>Fonte: Documentação oficial AWS EC2 Auto Scaling</em>
+</p>
 
 ### Componentes do Auto Scaling
 

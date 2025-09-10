@@ -2,6 +2,12 @@
 
 A **Amazon VPC** permite que você provisione uma seção da Nuvem AWS isolada logicamente, onde é possível executar recursos da AWS em uma rede virtual que você define. Você tem controle total sobre seu ambiente de rede virtual, incluindo a seleção de seu próprio intervalo de endereços IP, a criação de sub-redes e a configuração de tabelas de rotas e gateways de rede.
 
+<p align="center">
+    <img src="https://docs.aws.amazon.com/pt_br/vpc/latest/userguide/images/how-it-works.png" alt="Diagrama conceitual de uma VPC com sub-redes públicas e privadas, roteadores e gateways" width="600" />
+    <br/>
+    <em>Fonte: Documentação oficial AWS VPC</em>
+</p>
+
 ---
 
 ## Componentes Fundamentais da VPC

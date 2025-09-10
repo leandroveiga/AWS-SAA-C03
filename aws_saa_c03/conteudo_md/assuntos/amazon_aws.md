@@ -47,4 +47,13 @@ A infraestrutura da AWS é projetada para ser altamente disponível, resiliente 
 -   **O que é:** Um serviço totalmente gerenciado que estende a infraestrutura, os serviços, as APIs e as ferramentas da AWS para praticamente qualquer data center, espaço de co-location ou instalação on-premises do cliente.
 -   **Caso de Uso:** Cargas de trabalho que precisam permanecer on-premises devido a requisitos de baixa latência, processamento de dados local ou residência de dados. Essencialmente, é "trazer a AWS para o seu data center".
 
+## Rede Global: 
+<img src="../../img/rede.png">
+
+A AWS possui uma rede global de alta velocidade que interconecta todas as suas regiões, zonas de disponibilidade e zonas locais. Isso permite a transferência rápida e confiável de dados entre os serviços da AWS e os clientes.
+
+## Infraestrutura de Data Centers: 
+<img src="../../img/data_center.webp">
+
+A AWS mantém data centers em suas regiões e zonas de disponibilidade para hospedar serviços e recursos. Esses data centers são altamente seguros, com medidas rigorosas de controle de acesso e monitoramento de segurança.
 
