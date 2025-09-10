@@ -1,39 +1,50 @@
-# A Amazon AWS
+# A Infraestrutura Global da AWS
 
-## Infraestrutura da Amazon Web Services (AWS)
+A infraestrutura da AWS é projetada para ser altamente disponível, resiliente e escalável. Ela é composta por vários componentes hierárquicos.
 
-## Regiões da AWS: 
+## Regiões (Regions)
 <img src="../../img/regiao.png">
 
-A AWS opera em várias regiões geográficas ao redor do mundo. Cada região é uma área geograficamente isolada que contém várias zonas de disponibilidade. Exemplos de regiões incluem US East (Norte da Virgínia), Europa (Irlanda) e Ásia-Pacífico (Tóquio). As regiões são projetadas para isolamento geográfico e oferecem alta disponibilidade.
+-   **O que são:** Uma Região é uma área geográfica física no mundo onde a AWS possui múltiplos data centers. Exemplos: `us-east-1` (Norte da Virgínia), `sa-east-1` (São Paulo).
+-   **Isolamento:** As Regiões são completamente isoladas umas das outras. Isso garante a maior tolerância a falhas e estabilidade.
+-   **Escolha da Região:** A escolha de uma região é uma decisão crítica e geralmente baseada em:
+    1.  **Latência:** Ficar mais perto dos seus usuários para reduzir o tempo de resposta.
+    2.  **Custo:** Os preços dos serviços variam entre as regiões.
+    3.  **Conformidade (Compliance):** Requisitos legais e de soberania de dados (ex: GDPR na Europa).
+    4.  **Disponibilidade de Serviços:** Nem todos os serviços da AWS estão disponíveis em todas as regiões.
 
-## Zonas de Disponibilidade (AZs):
+## Zonas de Disponibilidade (Availability Zones - AZs)
 <img src="../../img/azs.png">
 
-Dentro de cada região, existem várias zonas de disponibilidade (AZs). Cada AZ é um data center independente com sua própria infraestrutura de energia, resfriamento e rede. As AZs são isoladas umas das outras para garantir a resiliência. Os clientes podem distribuir aplicativos em várias AZs para alta disponibilidade.
+-   **O que são:** Dentro de cada Região, existem múltiplas Zonas de Disponibilidade. Cada AZ é um ou mais data centers discretos com energia, refrigeração e rede redundantes.
+-   **Isolamento:** As AZs são fisicamente separadas por uma distância significativa (quilômetros) para evitar que um desastre em uma afete as outras, mas próximas o suficiente para terem baixa latência (<10ms) entre elas.
+-   **Alta Disponibilidade:** O conceito fundamental é distribuir suas aplicações em **múltiplas AZs** para garantir alta disponibilidade. Se uma AZ falhar, sua aplicação continua funcionando nas outras.
 
-## Zonas Locais (Local Zones): 
-<img src="../../img/local_zones.png">
-
-As Zonas Locais são extensões das regiões da AWS e são projetadas para oferecer baixa latência a cidades específicas. Elas permitem que os clientes executem aplicativos próximos aos usuários finais para melhorar o desempenho. As Zonas Locais estão disponíveis em algumas áreas metropolitanas.
-
-## AWS Wavelength: 
-<img src="../../img/wavelength.jpg">
-
-O AWS Wavelength é um serviço que estende as zonas de disponibilidade da AWS para as instalações de telecomunicações de operadoras de rede. Isso permite que os clientes executem aplicativos de baixa latência e sensíveis ao tempo em redes 5G. O AWS Wavelength está disponível em colaboração com operadoras de telecomunicações em várias cidades.
-
-## AWS Outposts: 
-<img src="../../img/outpost.png">
-
-O AWS Outposts é uma extensão da infraestrutura da AWS que permite que os clientes executem serviços e cargas de trabalho na infraestrutura local, em seus próprios data centers. Os Outposts são totalmente gerenciados pela AWS e permitem a integração com a nuvem pública. Isso é útil para cargas de trabalho que precisam residir localmente devido a requisitos regulatórios ou baixa latência.
-
-## Rede Global: 
+## Pontos de Presença (Edge Locations) e AWS Global Network
 <img src="../../img/rede.png">
 
-A AWS possui uma rede global de alta velocidade que interconecta todas as suas regiões, zonas de disponibilidade e zonas locais. Isso permite a transferência rápida e confiável de dados entre os serviços da AWS e os clientes.
+-   **O que são:** São locais onde a AWS armazena em cache cópias do seu conteúdo (via **Amazon CloudFront**) para que ele possa ser entregue mais rapidamente aos usuários em todo o mundo.
+-   **Diferença para AZs:** Existem muito mais Pontos de Presença do que AZs. Eles são usados para entregar conteúdo com baixa latência, não para executar sua infraestrutura principal como o EC2.
+-   **Rede Global:** Toda a infraestrutura da AWS (Regiões, AZs, Edge Locations) é interconectada por uma rede de fibra óptica global, privada e de alta velocidade, que a AWS controla.
 
-## Infraestrutura de Data Centers: 
-<img src="../../img/data_center.webp">
+## Extensões da Infraestrutura AWS
 
-A AWS mantém data centers em suas regiões e zonas de disponibilidade para hospedar serviços e recursos. Esses data centers são altamente seguros, com medidas rigorosas de controle de acesso e monitoramento de segurança.
+### AWS Local Zones
+<img src="../../img/local_zones.png">
+
+-   **O que são:** Uma extensão de uma Região da AWS que coloca computação, armazenamento e outros serviços selecionados mais perto de grandes centros populacionais, industriais e de TI.
+-   **Caso de Uso:** Aplicações que exigem latência de um dígito de milissegundo para os usuários finais ou instalações on-premises em uma cidade específica.
+
+### AWS Wavelength
+<img src="../../img/wavelength.jpg">
+
+-   **O que são:** Incorpora serviços de computação e armazenamento da AWS na borda das redes 5G das operadoras de telecomunicações.
+-   **Caso de Uso:** Aplicações de latência ultrabaixa para dispositivos móveis, como streaming de jogos, realidade virtual e carros conectados.
+
+### AWS Outposts
+<img src="../../img/outpost.png">
+
+-   **O que é:** Um serviço totalmente gerenciado que estende a infraestrutura, os serviços, as APIs e as ferramentas da AWS para praticamente qualquer data center, espaço de co-location ou instalação on-premises do cliente.
+-   **Caso de Uso:** Cargas de trabalho que precisam permanecer on-premises devido a requisitos de baixa latência, processamento de dados local ou residência de dados. Essencialmente, é "trazer a AWS para o seu data center".
+
 

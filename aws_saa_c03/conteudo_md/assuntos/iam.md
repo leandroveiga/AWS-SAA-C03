@@ -1,54 +1,79 @@
-# Introdução ao AWS Identity and Access Management (IAM)
+# AWS Identity and Access Management (IAM)
 <img src="../../img/iam.png">
 
-O AWS Identity and Access Management (IAM) é um serviço fundamental na Amazon Web Services (AWS) que permite o gerenciamento de identidades e o controle de acesso a recursos na nuvem. Aqui estão os principais conceitos relacionados ao IAM:
+O **AWS Identity and Access Management (IAM)** é o serviço que permite gerenciar o acesso aos serviços e recursos da AWS de forma segura. Com o IAM, você pode criar e gerenciar usuários e grupos da AWS e usar permissões para permitir e negar o acesso a recursos da AWS. O IAM é um serviço global e um pilar fundamental da segurança na AWS.
 
-## Usuários, Grupos e Políticas
+O IAM opera com base em três conceitos principais: **Principals**, **Authentication**, e **Authorization**.
+
+---
+
+## 1. Principals (Quem pode agir?)
 <img src="../../img/user_group_roles.png">
 
-- **Usuários**: Representam pessoas ou serviços que interagem com a AWS. Cada usuário possui suas próprias credenciais de login.
-  <img src="../../img/user.webp">
+Um *principal* é uma pessoa ou aplicação que pode fazer uma solicitação para uma ação ou operação em um recurso da AWS.
 
-- **Grupos**: São coleções lógicas de usuários. As políticas são associadas a grupos para conceder permissões.
-  <img src="../../img/group.png">
+-   **Usuário Raiz (Root User):** A identidade criada quando você abre sua conta AWS. Possui acesso completo a todos os serviços e recursos. **Boa prática:** Não use o usuário root para tarefas diárias. Habilite a Autenticação Multi-Fator (MFA) para ele e guarde as credenciais em um local seguro.
 
-- **Políticas**: Definem as permissões que os usuários e grupos têm. Elas são escritas em JSON e podem ser anexadas a usuários, grupos ou recursos.
-  <img src="../../img/role.png">
+-   **Usuários IAM (IAM Users):**
+    <img src="../../img/user.webp">
+    Uma entidade que você cria na AWS para representar a pessoa ou aplicação que a utiliza para interagir com a AWS. Um usuário IAM consiste em um nome e credenciais (senha para o console e/ou chaves de acesso para a CLI/SDK).
 
-## Processo de Autenticação
-  <img src="../../img/autenticacao.png">
+-   **Grupos IAM (IAM Groups):**
+    <img src="../../img/group.png">
+    Uma coleção de usuários IAM. Os grupos permitem que você especifique permissões para múltiplos usuários, o que pode facilitar o gerenciamento de permissões. Um usuário pode pertencer a múltiplos grupos.
 
-- A autenticação no IAM envolve a verificação da identidade de um usuário ou serviço. Isso pode ser feito por meio de senhas, chaves de acesso, tokens ou outras formas de autenticação.
+-   **Funções IAM (IAM Roles):**
+    <img src="../../img/role.png">
+    Uma identidade IAM que você pode criar em sua conta que tem permissões específicas. Uma role é semelhante a um usuário, mas **não possui credenciais de longo prazo** (senha ou chaves de acesso). Em vez disso, quando uma entidade (usuário ou serviço) assume uma role, ela obtém credenciais de segurança temporárias.
+    -   **Caso de Uso Principal:** Delegar acesso a usuários, aplicações ou serviços que normalmente não têm acesso aos seus recursos da AWS. Por exemplo, permitir que uma instância EC2 acesse um bucket S3 sem armazenar chaves de acesso na instância.
 
-## MFA (Autenticação de Multifator)
-  <img src="../../img/mfa.png">
+---
 
-- O MFA adiciona uma camada extra de segurança, exigindo que os usuários forneçam duas ou mais formas de identificação antes de acessar recursos críticos.
+## 2. Autenticação (Quem é você?)
+<img src="../../img/autenticacao.png">
+A autenticação é o processo de verificar a identidade de um principal.
 
-## Utilizando o Security Token Service (STS)
-  <img src="../../img/sts.webp">
+-   **Senha:** Para acesso ao Console de Gerenciamento da AWS.
+-   **Chaves de Acesso (Access Keys):** Para acesso programático via AWS CLI, SDK ou API.
+-   **Autenticação Multi-Fator (MFA):**
+    <img src="../../img/mfa.png">
+    Uma camada extra de segurança. Após fornecer a senha ou chave, o usuário deve fornecer um segundo fator de autenticação de um dispositivo MFA (físico ou virtual). **Boa prática:** Habilite o MFA para o usuário root e para todos os usuários IAM com permissões sensíveis.
 
-- O STS permite a geração de tokens temporários que concedem acesso aos recursos da AWS. Isso é útil para cenários de acesso temporário.
+---
 
-## Políticas de Recurso e Identidade
+## 3. Autorização (O que você pode fazer?)
+A autorização é o processo de determinar quais permissões um principal autenticado possui. Isso é feito através de **Políticas IAM**.
 
-- As políticas de recurso controlam o acesso a recursos específicos, como buckets S3 ou instâncias EC2.
+### Políticas IAM (IAM Policies)
+<img src="../../img/police_exemplo.png">
+Uma política é um documento JSON que define permissões. Ela especifica quais ações são permitidas ou negadas, em quais recursos.
 
-- As políticas de identidade controlam o que os usuários e grupos podem fazer no IAM, como criar usuários ou definir políticas.
+#### Estrutura de uma Política JSON:
+-   **Effect:** `Allow` (Permitir) ou `Deny` (Negar).
+-   **Action:** A ação do serviço que será permitida ou negada (ex: `s3:GetObject`, `ec2:StartInstances`).
+-   **Resource:** O recurso da AWS ao qual a ação se aplica, identificado por um ARN (Amazon Resource Name).
+-   **Condition (Opcional):** Condições para que a política entre em vigor (ex: `aws:SourceIp`, `aws:CurrentTime`).
 
-## Estrutura das Políticas
-  <img src="../../img/police_exemplo.png">
+#### Tipos de Políticas:
+1.  **Políticas Baseadas em Identidade (Identity-Based Policies):** Anexadas a um principal IAM (usuário, grupo ou role). Elas definem o que *aquela identidade* pode fazer.
+2.  **Políticas Baseadas em Recurso (Resource-Based Policies):** Anexadas a um recurso (ex: um bucket S3, uma fila SQS). Elas definem quem tem permissão para acessar *aquele recurso*.
 
-- As políticas são estruturadas em JSON e contêm elementos como "Effect" (Permitir ou Negar), "Action" (Ação permitida) e "Resource" (Recurso afetado).
+---
 
-## Boas Práticas para o IAM
+## AWS Security Token Service (STS)
+<img src="../../img/sts.webp">
 
-- Princípio do menor privilégio: Conceda apenas as permissões necessárias para realizar uma tarefa específica.
+O **STS** é um serviço web que permite solicitar credenciais temporárias com privilégios limitados para usuários IAM ou para usuários que você autentica (usuários federados). É o serviço que gera as credenciais temporárias quando uma *Role* é assumida.
 
-- Rotação de credenciais: Faça a rotação regular de senhas e chaves de acesso para aumentar a segurança.
+---
 
-- Auditoria e monitoramento: Utilize ferramentas como AWS CloudTrail para rastrear atividades e revisar registros regularmente.
+## Melhores Práticas de Segurança do IAM
 
-- Implemente MFA sempre que possível para proteger contas críticas.
+-   **Princípio do Menor Privilégio:** Conceda apenas as permissões mínimas necessárias para realizar uma tarefa.
+-   **Use Roles para Aplicações:** Para aplicações executadas em instâncias EC2, use IAM Roles para fornecer credenciais temporárias em vez de armazenar chaves de acesso na instância.
+-   **Nunca use o Root User:** Para tarefas do dia-a-dia.
+-   **Habilite MFA:** Para o usuário root e usuários privilegiados.
+-   **Rotacione Credenciais:** Rotacione chaves de acesso regularmente.
+-   **Use Políticas para Controlar Acesso:** Em vez de conceder permissões diretamente aos usuários, use grupos e anexe políticas a eles.
+-   **Monitore a Atividade:** Use o **AWS CloudTrail** para registrar todas as chamadas de API feitas em sua conta e auditar atividades.
 
-- Siga as melhores práticas de segurança da AWS para manter sua infraestrutura segura.

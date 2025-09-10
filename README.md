@@ -4,7 +4,7 @@
 
 ## Descrição
 
-Este repositório foi criado para auxiliar nos estudos e preparação para a Certificação Amazon AWS Solutions Architect Associate em 2023. Aqui, você encontrará recursos e informações importantes para ajudá-lo a se preparar adequadamente para o exame.
+Este repositório foi criado para auxiliar nos estudos e preparação para a Certificação Amazon AWS Solutions Architect Associate em 2025. Aqui, você encontrará recursos e informações importantes para ajudá-lo a se preparar adequadamente para o exame.
 
 ## Objetivo
 
@@ -24,10 +24,14 @@ O objetivo principal deste repositório é fornecer a você uma estrutura organi
 | [Load Balancers e Auto Scaling](./aws_saa_c03/conteudo_md/assuntos/auto_scaling_load_balancers.md) &#x2611; | &check;            |
 |            [ARCHITECT - Database AWS](./aws_saa_c03/conteudo_md/assuntos/database.md)  &#x2611;             | &check;            |
 |      [DNS, Cache e Performance](./aws_saa_c03/conteudo_md/assuntos/dns_cache_performance.md)  &#x2611;      | &check;            |
-|         [Block e File Storage](./aws_saa_c03/conteudo_md/assuntos/block_file_storage.md)  &#x2610;          | &cross;            |
-|        [ARCHITECT - Aplicações AWS](./aws_saa_c03/conteudo_md/assuntos/aplicacoes_aws.md)  &#x2610;         | &cross;            |
-|                 [Serverless Lambda](./aws_saa_c03/conteudo_md/assuntos/lambda.md)  &#x2610;                 | &cross;            |
-|          [Segurança na Cloud](./aws_saa_c03/conteudo_md/assuntos/seguranca_na_cloud.md)  &#x2610;           | &cross;            |
+|         [Block e File Storage](./aws_saa_c03/conteudo_md/assuntos/block_file_storage.md)  &#x2611;          | &check;            |
+|        [ARCHITECT - Aplicações AWS](./aws_saa_c03/conteudo_md/assuntos/aplicacoes_aws.md)  &#x2611;         | &check;            |
+|                 [Serverless Lambda](./aws_saa_c03/conteudo_md/assuntos/lambda.md)  &#x2611;                 | &check;            |
+|          [Segurança na Cloud](./aws_saa_c03/conteudo_md/assuntos/seguranca_na_cloud.md)  &#x2611;           | &check;            |
+| [Monitoramento e Governança](./aws_saa_c03/conteudo_md/assuntos/monitoramento_governanca.md)  &#x2611; | &check;            |
+| [Migração e Transferência de Dados](./aws_saa_c03/conteudo_md/assuntos/migracao_transferencia_dados.md)  &#x2611; | &check;            |
+| [Contêineres na AWS (ECS, EKS, Fargate, ECR)](./aws_saa_c03/conteudo_md/assuntos/containers_aws.md)  &#x2611; | &check;            |
+| [Serviços Avançados e DR](./aws_saa_c03/conteudo_md/assuntos/servicos_avancados_e_dr.md)  &#x2611; | &check;            |
 
 
 Neste documento, você encontrará um resumo das principais informações sobre a certificação AWS Solutions Architect Associate, incluindo tópicos abordados e dicas de estudo.
