@@ -25,6 +25,12 @@ Referência da imagem e conteúdo: Documentação oficial Amazon EC2 – https:/
     -   **Elastic IP (EIP):** Um endereço IPv4 público e estático que você pode alocar para sua conta e associar a uma instância para que ela tenha um IP fixo.
     -   **Key Pair (Par de Chaves):** Credenciais de segurança que você usa para provar sua identidade ao se conectar a uma instância (usando SSH para Linux ou RDP para Windows).
 
+### Metadados da Instância e User Data
+
+-   **User Data:** É um script que você pode fornecer ao lançar uma instância EC2. Esse script é executado **apenas uma vez**, na primeira inicialização da instância. É comumente usado para realizar tarefas de configuração automatizadas, como instalar pacotes, aplicar patches ou baixar código.
+
+-   **Instance Metadata Service (IMDS):** É um serviço disponível em um endereço IP especial (`169.254.169.254`) que pode ser acessado *de dentro* da instância EC2. Ele fornece metadados sobre a própria instância, como seu ID, tipo, Zona de Disponibilidade, e credenciais de segurança temporárias associadas a uma IAM Role. É a maneira segura pela qual as aplicações em uma instância EC2 obtêm permissões para interagir com outros serviços da AWS.
+
 ---
 
 ## Modelos de Compra e Preços do EC2

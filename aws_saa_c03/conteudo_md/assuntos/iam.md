@@ -65,6 +65,15 @@ Uma política é um documento JSON que define permissões. Ela especifica quais 
 
 O **STS** é um serviço web que permite solicitar credenciais temporárias com privilégios limitados para usuários IAM ou para usuários que você autentica (usuários federados). É o serviço que gera as credenciais temporárias quando uma *Role* é assumida.
 
+## AWS IAM Identity Center (antigo AWS SSO)
+
+O **IAM Identity Center** é o serviço recomendado para gerenciar o acesso humano a múltiplas contas da AWS e aplicações na nuvem. Ele simplifica o gerenciamento de acesso, fornecendo um local central para criar ou conectar identidades de usuários e atribuir-lhes acesso.
+
+-   **Como funciona:** Em vez de criar usuários IAM em cada conta, você gerencia seus usuários e grupos em um único local. Os usuários fazem login em um portal central e, a partir daí, acessam as contas e aplicações da AWS para as quais receberam permissões.
+-   **Fonte de Identidade:** Pode usar seu próprio provedor de identidade (como Active Directory, Okta, Azure AD) ou o diretório do próprio Identity Center.
+-   **Permission Sets:** As permissões são definidas em "Conjuntos de Permissões" (que são essencialmente abstrações sobre as políticas do IAM) e atribuídas a usuários ou grupos para contas específicas.
+-   **Vantagem:** Centraliza o gerenciamento de usuários, simplifica o login (Single Sign-On) e melhora a postura de segurança ao evitar a proliferação de usuários IAM e chaves de acesso de longo prazo.
+
 ---
 
 ## Melhores Práticas de Segurança do IAM

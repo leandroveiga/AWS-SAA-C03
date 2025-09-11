@@ -71,7 +71,15 @@ O AWS KMS é um serviço gerenciado que facilita a criação e o controle das ch
     <br/><em>Fonte: AWS KMS Developer Guide (Hierarquia de chaves)</em>
 </p>
 
-## 5. AWS Inspector
+## 5. AWS Certificate Manager (ACM)
+
+O ACM é um serviço que permite provisionar, gerenciar e implantar certificados SSL/TLS públicos e privados para uso com serviços da AWS e seus recursos internos.
+
+-   **Certificados Públicos Gratuitos:** O ACM fornece certificados SSL/TLS públicos gratuitos que você pode usar em serviços integrados como **Elastic Load Balancing (ALB/NLB)** e **Amazon CloudFront**.
+-   **Renovação Automática:** O ACM gerencia a renovação automática dos certificados, eliminando a necessidade de processos manuais.
+-   **Segurança:** As chaves privadas dos certificados são protegidas e gerenciadas pela AWS.
+
+## 6. AWS Inspector
 
 O Amazon Inspector é um serviço de gerenciamento de vulnerabilidades que verifica continuamente suas cargas de trabalho da AWS (instâncias EC2 e imagens de contêiner no ECR) em busca de vulnerabilidades de software e exposição não intencional à rede.
 

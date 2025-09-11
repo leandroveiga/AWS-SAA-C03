@@ -55,4 +55,10 @@ O Elastic Beanstalk é um serviço de orquestração que facilita a implantaçã
     -   Monitoramento da saúde da aplicação
     -   Provisionamento de instâncias EC2
 -   **Nível de Abstração:** É um serviço de Plataforma como Serviço (PaaS). Ele oferece menos flexibilidade que provisionar os recursos manualmente (IaaS), mas é muito mais simples e rápido para colocar uma aplicação no ar. Você ainda tem acesso à configuração subjacente se precisar.
+-   **Modelos de Implantação (Deployment Policies):**
+    -   **All at once:** Implanta a nova versão em todas as instâncias de uma vez. Rápido, mas causa indisponibilidade.
+    -   **Rolling:** Implanta a nova versão em lotes de instâncias, mantendo o restante em serviço. Reduz a capacidade durante a implantação.
+    -   **Rolling with additional batch:** Lança um novo lote de instâncias para a implantação, mantendo a capacidade total.
+    -   **Immutable:** Lança um novo conjunto completo de instâncias com a nova versão em um novo Auto Scaling Group e, após a verificação de saúde, troca o tráfego para as novas instâncias. Mais seguro e sem impacto na capacidade.
+    -   **Blue/Green:** Implanta a nova versão em um ambiente separado e troca o tráfego via DNS (requer configuração manual).
 -   **Caso de Uso:** Ideal para desenvolvedores que querem focar no código e não no gerenciamento da infraestrutura. Perfeito para aplicações web tradicionais.
