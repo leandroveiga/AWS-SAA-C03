@@ -2,14 +2,6 @@
 
 O **Amazon EC2** é um serviço web que fornece capacidade computacional segura e redimensionável na nuvem. Ele foi projetado para facilitar a computação em escala de web para os desenvolvedores. Essencialmente, o EC2 permite que você alugue servidores virtuais, conhecidos como **instâncias**, para executar suas aplicações.
 
----
-
-Nota: Uso de imagem diretamente hospedada em docs.aws.amazon.com conforme solicitado.
-
-Referência da imagem e conteúdo: Documentação oficial Amazon EC2 – https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/concepts.html
-
----
-
 ## Componentes Fundamentais de uma Instância EC2
 
 -   **Amazon Machine Image (AMI):** É o modelo para sua instância. Uma AMI inclui um sistema operacional, um servidor de aplicação e aplicações. Você pode escolher AMIs fornecidas pela AWS, pela comunidade ou criar as suas próprias.
@@ -21,7 +13,7 @@ Referência da imagem e conteúdo: Documentação oficial Amazon EC2 – https:/
     -   **Instance Store:** Armazenamento temporário em nível de bloco localizado nos discos do servidor físico que hospeda a instância. Os dados em um instance store **são perdidos** quando a instância é parada, hibernada ou terminada.
 -   **Rede e Segurança:**
     -   **Virtual Private Cloud (VPC):** Uma rede virtual isolada onde suas instâncias são executadas.
-    -   **Security Groups:** Atuam como um firewall virtual para suas instâncias, controlando o tráfego de entrada e saída. São *stateful*.
+    -   **Security Groups:** Atuam como um firewall virtual para suas instâncias, controlando o tráfego de entrada (inbound) e saída (outbound). São *stateful*, o que significa que se você permitir tráfego de entrada em uma porta, o tráfego de resposta de saída correspondente é automaticamente permitido, e vice-versa.
     -   **Elastic IP (EIP):** Um endereço IPv4 público e estático que você pode alocar para sua conta e associar a uma instância para que ela tenha um IP fixo.
     -   **Key Pair (Par de Chaves):** Credenciais de segurança que você usa para provar sua identidade ao se conectar a uma instância (usando SSH para Linux ou RDP para Windows).
 
@@ -30,6 +22,7 @@ Referência da imagem e conteúdo: Documentação oficial Amazon EC2 – https:/
 -   **User Data:** É um script que você pode fornecer ao lançar uma instância EC2. Esse script é executado **apenas uma vez**, na primeira inicialização da instância. É comumente usado para realizar tarefas de configuração automatizadas, como instalar pacotes, aplicar patches ou baixar código.
 
 -   **Instance Metadata Service (IMDS):** É um serviço disponível em um endereço IP especial (`169.254.169.254`) que pode ser acessado *de dentro* da instância EC2. Ele fornece metadados sobre a própria instância, como seu ID, tipo, Zona de Disponibilidade, e credenciais de segurança temporárias associadas a uma IAM Role. É a maneira segura pela qual as aplicações em uma instância EC2 obtêm permissões para interagir com outros serviços da AWS.
+    -   **Nota de Segurança (IMDSv2):** A AWS recomenda fortemente o uso do **IMDSv2**, que é uma versão aprimorada que utiliza requisições orientadas a sessão para se proteger contra certos tipos de vulnerabilidades (como SSRF - Server-Side Request Forgery). Para o exame, saiba que o IMDSv2 é a prática recomendada.
 
 ---
 
@@ -42,7 +35,8 @@ Este é um tópico **extremamente importante** para o exame.
 | **On-Demand** | Cargas de trabalho com picos, imprevisíveis, ou para desenvolvimento/teste. | Pague por segundo (ou hora), sem compromisso de longo prazo. Mais flexível, porém mais caro. |
 | **Savings Plans** | Cargas de trabalho com uso consistente e previsível. | Comprometa-se com uma quantidade consistente de uso de computação (ex: $10/hora) por 1 ou 3 anos para obter um grande desconto. **É o modelo mais flexível e recomendado para economia.** |
 | **Reserved Instances** | Cargas de trabalho com uso muito estável e previsível (ex: um banco de dados). | Comprometa-se com uma configuração de instância específica (família, região) por 1 ou 3 anos para obter o maior desconto. Menos flexível que os Savings Plans. |
-| **Spot Instances** | Cargas de trabalho tolerantes a falhas, sem estado, ou com tempo flexível (ex: processamento em lote, renderização). | Use a capacidade computacional não utilizada da AWS com até 90% de desconto. A AWS pode interromper suas instâncias com um aviso de 2 minutos. |
+| **Spot Instances** | Cargas de trabalho tolerantes a falhas, sem estado, ou com tempo flexível (ex: processamento em lote, renderização). | Use a capacidade computacional não utilizada da AWS com até 90% de desconto. A AWS pode interromper suas instâncias com um aviso de 2 minutos.
+| | **Spot Blocks & Fleets:** | **Spot Blocks** permitem reservar instâncias Spot por um período definido (1 a 6 horas) sem interrupções. **Spot Fleets** permitem provisionar um conjunto de instâncias Spot (e opcionalmente On-Demand) para atingir uma capacidade alvo desejada. |
 | **Dedicated Hosts** | Cargas de trabalho com requisitos de conformidade ou licenciamento de software específicos (BYOL - Bring Your Own License). | Pague por um servidor físico inteiro dedicado ao seu uso. Máximo controle e isolamento. |
 | **Dedicated Instances**| Instâncias que rodam em hardware dedicado a uma única conta. | Não fornece a visibilidade e o controle de um Dedicated Host, sendo uma opção menos comum hoje em dia. |
 
@@ -63,6 +57,18 @@ Este é um tópico **extremamente importante** para o exame.
     <img alt="Ciclo de vida da instância EC2" width="560" src="https://docs.aws.amazon.com/pt_br/AWSEC2/latest/UserGuide/images/instance_lifecycle.png" />
     <br/><em>Fonte: AWS EC2 User Guide (Instance Lifecycle)</em>
 </p>
+
+### Hibernação de Instância (Hibernate)
+
+Além dos estados de *Stop* e *Terminate*, as instâncias EC2 podem ser **hibernadas**.
+
+-   **Como funciona:** Quando uma instância é hibernada, o conteúdo da sua memória RAM é salvo no volume raiz do EBS. Ao reiniciar a instância, o conteúdo da RAM é restaurado.
+-   **Vantagem:** Permite que aplicações que demoram para inicializar (carregando dados na memória) possam ser pausadas e reiniciadas rapidamente, sem perder seu estado.
+-   **Requisitos:**
+    -   A instância deve ser **EBS-backed**.
+    -   O volume raiz do EBS deve ser **criptografado**.
+    -   O volume raiz do EBS deve ser grande o suficiente para armazenar o conteúdo da RAM.
+-   **Importante:** Assim como no estado *Stopped*, os dados no **Instance Store são perdidos** durante a hibernação. Você é cobrado pelo armazenamento do volume EBS enquanto a instância está hibernada.
 
 ---
 
