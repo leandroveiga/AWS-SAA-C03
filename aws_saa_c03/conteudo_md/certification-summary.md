@@ -28,7 +28,7 @@ A tabela abaixo serve como um checklist para os principais tópicos de estudo.
 | :--- | :--- | :--- |
 | **Fundamentos da Nuvem e AWS** | [Conceitos de Cloud Computing](./assuntos/conceitos_cloud_computing.md), [Infraestrutura Global da AWS](./assuntos/amazon_aws.md) | &#x2611; |
 | **Identidade e Segurança** | [IAM](./assuntos/iam.md), [Segurança na Nuvem (WAF, Shield, KMS)](./assuntos/seguranca_na_cloud.md) | &#x2611; |
-| **Rede (Networking)** | [VPC (Sub-redes, Gateways, NACLs, Security Groups)](./assuntos/vpc.md), Conectividade (VPN, Direct Connect, Transit Gateway) | &#x2611; |
+| **Rede (Networking)** | [VPC (Sub-redes, Gateways, NACLs, Security Groups)](./assuntos/vpc.md), [Conectividade (VPN, Direct Connect, Transit Gateway, Internet Gateway)](./assuntos/conectividade.md) | &#x2611; |
 | **Computação (Compute)** | [EC2 (Tipos, Preços, Placement Groups)](./assuntos/ec2.md), [Auto Scaling & Load Balancing](./assuntos/auto_scaling_load_balancers.md) | &#x2611; |
 | **Armazenamento (Storage)** | [S3 (Classes, Segurança, Ciclo de Vida)](./assuntos/s3.md), [Block & File Storage (EBS, EFS, FSx)](./assuntos/block_file_storage.md) | &#x2611; |
 | **Bancos de Dados (Databases)** | [RDS, Aurora, DynamoDB, ElastiCache, Redshift](./assuntos/database.md) | &#x2611; |
