@@ -66,3 +66,23 @@ O AWS DMS é um serviço gerenciado que ajuda a migrar bancos de dados para a AW
     <img alt="Fluxo de replicação AWS DMS" width="640" src="https://docs.aws.amazon.com/pt_br/dms/latest/userguide/images/datarep-Welcome.png" />
     <br/><em>Fonte: AWS DMS User Guide</em>
 </p>
+
+
+## 5. Amazon Kinesis
+
+O Amazon Kinesis é uma família de serviços projetada para coletar, processar e analisar dados de streaming em tempo real. É ideal para lidar com grandes volumes de dados gerados continuamente, como logs de aplicações, dados de clickstream de websites, feeds de redes sociais e dados de dispositivos IoT.
+
+-   **Kinesis Data Streams:**
+    -   **Função:** É o serviço principal para captura e armazenamento de streams de dados. Os dados são armazenados em "shards" por um período de retenção (geralmente 24 horas, mas pode ser estendido para até 365 dias).
+    -   **Como funciona:** "Produtores" (como servidores web, aplicações móveis) enviam dados para o stream. "Consumidores" (como instâncias EC2, funções Lambda) leem e processam esses dados a partir dos shards em tempo real.
+    -   **Caso de uso:** Análise de logs em tempo real, processamento de dados de jogos, ingestão de dados para machine learning.
+
+-   **Kinesis Data Firehose:**
+    -   **Função:** É a maneira mais fácil de carregar dados de streaming em data stores e ferramentas de análise. Ele captura, transforma e carrega os dados de forma totalmente gerenciada.
+    -   **Como funciona:** Você aponta o Firehose para um stream de dados (pode ser um Kinesis Data Stream ou dados enviados diretamente para o Firehose) e o configura para entregar esses dados a um destino como Amazon S3, Amazon Redshift, Amazon OpenSearch Service ou Splunk. Ele pode agrupar, comprimir e transformar os dados (ex: de JSON para Parquet) antes da entrega.
+    -   **Diferença para o Data Streams:** O Firehose é focado na *entrega* (load) para um destino, enquanto o Data Streams é focado no *processamento* em tempo real por consumidores customizados.
+
+-   **Kinesis Data Analytics:**
+    -   **Função:** Permite processar e analisar dados de streaming em tempo real usando SQL padrão ou Apache Flink.
+    -   **Como funciona:** Você pode executar consultas SQL contínuas sobre os dados em um Kinesis Data Stream ou Kinesis Data Firehose para filtrar, transformar e agregar os dados em tempo real.
+    -   **Caso de uso:** Criar painéis de análise em tempo real, gerar alertas baseados em métricas de streaming e realizar análises de séries temporais.

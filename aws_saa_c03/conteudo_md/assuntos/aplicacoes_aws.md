@@ -62,3 +62,36 @@ O Elastic Beanstalk é um serviço de orquestração que facilita a implantaçã
     -   **Immutable:** Lança um novo conjunto completo de instâncias com a nova versão em um novo Auto Scaling Group e, após a verificação de saúde, troca o tráfego para as novas instâncias. Mais seguro e sem impacto na capacidade.
     -   **Blue/Green:** Implanta a nova versão em um ambiente separado e troca o tráfego via DNS (requer configuração manual).
 -   **Caso de Uso:** Ideal para desenvolvedores que querem focar no código e não no gerenciamento da infraestrutura. Perfeito para aplicações web tradicionais.
+
+## 5. Amazon Cognito
+
+O Amazon Cognito permite adicionar inscrição, login e controle de acesso de usuários às suas aplicações web e móveis de forma rápida e fácil.
+
+-   **Conceito Principal:** É um serviço de identidade totalmente gerenciado. Ele lida com toda a complexidade de autenticação, autorização e gerenciamento de usuários.
+-   **Componentes Principais:**
+    -   **User Pools (Grupos de Usuários):** São diretórios de usuários. Um User Pool permite que os usuários se inscrevam e façam login na sua aplicação. Ele pode ser um provedor de identidade autônomo ou pode federar com provedores de identidade de terceiros (como Google, Facebook, Apple, SAML 2.0).
+    -   **Identity Pools (Grupos de Identidades):** Permitem conceder aos seus usuários (autenticados ou anônimos) acesso temporário a outros serviços da AWS. Após um usuário ser autenticado por um User Pool ou um provedor de identidade de terceiros, o Identity Pool troca o token de identidade por credenciais temporárias da AWS com permissões limitadas que você define via IAM Roles.
+-   **Caso de Uso:** Proteger o acesso a uma API no API Gateway, permitir que usuários de uma aplicação móvel salvem dados no DynamoDB de forma segura, ou adicionar login social (Facebook, Google) à sua aplicação web.
+
+## 6. AWS Step Functions
+
+O Step Functions é um serviço de orquestração serverless que permite sequenciar funções AWS Lambda e múltiplos serviços da AWS em fluxos de trabalho visualmente intuitivos.
+
+-   **Conceito Principal:** Você define seus fluxos de trabalho como **Máquinas de Estado (State Machines)**. Cada etapa (State) no seu fluxo de trabalho pode ser uma função Lambda, uma interação com SQS, SNS, DynamoDB, ou outros serviços.
+-   **Recursos:**
+    -   **Sequenciamento:** Executa tarefas em sequência.
+    -   **Paralelismo:** Executa ramos de tarefas em paralelo.
+    -   **Condicionais:** Escolhe qual etapa executar com base na saída da etapa anterior.
+    -   **Tratamento de Erros:** Permite `try/catch/finally` para lidar com falhas e executar lógicas de repetição (retry).
+-   **Caso de Uso:** Orquestrar um processo de pedido complexo: validar o pedido, processar o pagamento, iniciar o envio e enviar notificações. Se qualquer etapa falhar, o Step Functions pode reverter a transação ou notificar um administrador.
+
+## 7. Amazon EventBridge
+
+O EventBridge é um barramento de eventos (event bus) serverless que facilita a conexão de aplicações usando dados de suas próprias aplicações, de aplicações SaaS (Software-as-a-Service) e de serviços da AWS.
+
+-   **Conceito Principal:** É uma evolução do CloudWatch Events, mas com mais funcionalidades. Ele permite que sistemas desacoplados se comuniquem através de eventos. Um serviço de origem emite um evento para o barramento de eventos, e o EventBridge usa **Regras (Rules)** para filtrar e enviar esses eventos para um ou mais **Alvos (Targets)**.
+-   **Componentes:**
+    -   **Event Bus:** O barramento que recebe os eventos. Existe um barramento padrão (default) que recebe eventos de serviços da AWS. Você pode criar barramentos personalizados para suas aplicações.
+    -   **Rules:** Filtram os eventos recebidos com base em seu conteúdo (o `event pattern`).
+    -   **Targets:** O que é invocado quando uma regra corresponde a um evento. Alvos podem ser funções Lambda, filas SQS, tópicos SNS, máquinas de estado do Step Functions, e muitos outros.
+-   **Diferença para o SNS:** Enquanto o SNS é ótimo para "fan-out" simples (uma mensagem para muitos assinantes), o EventBridge é mais poderoso para roteamento complexo baseado no conteúdo do evento, permitindo que diferentes alvos reajam a diferentes tipos de eventos vindos da mesma fonte.
