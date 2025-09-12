@@ -2,6 +2,21 @@
 
 A AWS oferece um portfólio abrangente de serviços para ajudar a migrar dados, bancos de dados, aplicações e até mesmo servidores inteiros do seu ambiente on-premises para a nuvem, ou entre diferentes regiões da AWS. A escolha do serviço correto depende do volume de dados, da velocidade da sua conexão de rede e da natureza da migração (online vs. offline).
 
+## Categorias de Serviços de Migração
+
+Os serviços de migração e transferência podem ser divididos em duas categorias principais:
+
+-   **Dispositivos Físicos (Transferência Offline):** Para grandes volumes de dados onde a transferência pela internet não é viável. A AWS envia um dispositivo físico para sua localidade.
+    -   **AWS Snow Family (Snowcone, Snowball Edge, Snowmobile)**
+
+-   **Serviços Gerenciados (Transferência Online):** Para transferências de dados pela rede, migrações de banco de dados e integração híbrida.
+    -   **AWS Storage Gateway**
+    -   **AWS DataSync**
+    -   **AWS Database Migration Service (DMS)**
+    -   **Amazon Kinesis**
+
+A seguir, detalhamos cada um desses serviços.
+
 ## 1. AWS Storage Gateway
 
 O AWS Storage Gateway é um serviço híbrido que conecta seus ambientes de aplicações on-premises ao armazenamento na nuvem da AWS. Ele fornece uma ponte segura e de baixa latência entre seus sistemas locais e os serviços de armazenamento da AWS, como S3, EBS e Glacier.
