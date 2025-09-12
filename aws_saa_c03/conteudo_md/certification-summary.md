@@ -33,7 +33,12 @@ A tabela abaixo serve como um checklist para os principais tópicos de estudo.
 | **Armazenamento (Storage)** | [S3 (Classes, Segurança, Ciclo de Vida)](./assuntos/s3.md), [Block & File Storage (EBS, EFS, FSx)](./assuntos/block_file_storage.md) | &#x2611; |
 | **Bancos de Dados (Databases)** | [RDS, Aurora, DynamoDB, ElastiCache, Redshift](./assuntos/database.md) | &#x2611; |
 | **Entrega de Conteúdo e DNS** | [Route 53, CloudFront, Global Accelerator](./assuntos/dns_cache_performance.md) | &#x2611; |
-| **Aplicações e Serverless** | [SQS, SNS, API Gateway, Elastic Beanstalk](./assuntos/aplicacoes_aws.md), [Lambda](./assuntos/lambda.md) | &#x2611; |
+| **Aplicações e Serverless** | [SQS, SNS, API Gateway, Elastic Beanstalk](./assuntos/aplicacoes_aws.md), [Lambda](./assuntos/lambda.md), [Step Functions](./assuntos/step_functions.md) | &#x2611; |
+| **Contêineres (Containers)** | [ECS, ECR, EKS, Fargate](./assuntos/containers_aws.md) | &#x2611; |
+| **Migração e Transferência** | [Snow Family, DataSync, DMS, Storage Gateway](./assuntos/migracao_transferencia_dados.md) | &#x2611; |
+| **Monitoramento e Governança** | [CloudWatch, CloudTrail, Trusted Advisor](./assuntos/monitoramento_governanca.md) | &#x2611; |
+| **Custos e Otimização** | [Cost Explorer, Budgets, Savings Plans](./assuntos/custos_governanca.md) | &#x2611; |
+| **Arquiteturas Avançadas e DR** | [Disaster Recovery Strategies, Resiliency](./assuntos/servicos_avancados_e_dr.md) | &#x2611; |
 
 **Legenda:**
 -   &#x2611; - Material de estudo disponível e revisado.
