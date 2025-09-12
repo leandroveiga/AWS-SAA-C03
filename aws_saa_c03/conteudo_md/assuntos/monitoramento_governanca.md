@@ -53,29 +53,17 @@ O AWS Config é um serviço que permite acessar, auditar e avaliar as configura�
     -   **Regras do Config (Config Rules):** Permitem verificar a conformidade dos recursos com políticas específicas.
         -   **Regras Gerenciadas:** Regras pré-construídas pela AWS (ex: "verificar se o versionamento está habilitado em todos os buckets S3", "verificar se nenhuma porta SSH (22) está aberta para o mundo").
         -   **Regras Customizadas:** Você pode criar suas próprias regras usando funções Lambda.
-    -   **Remediação Automática:** O AWS Config pode ser configurado para executar ações de remediação (usando documentos do AWS Systems Manager) quando um recurso é considerado não conforme.
+    -   **Remediação Automática:** Pode ser integrado com o AWS Systems Manager para executar ações de remediação automaticamente quando um recurso se torna não conforme.
 
-## 4. AWS Organizations e Control Tower
+---
 
--   **AWS Organizations:**
-    -   Permite gerenciar centralmente múltiplas contas AWS.
-    -   **Faturamento Consolidado (Consolidated Billing):** Centraliza o pagamento de todas as contas e pode oferecer descontos por volume.
-    -   **Unidades Organizacionais (OUs):** Permite agrupar contas para aplicar políticas de gerenciamento (ex: OUs para "Produção", "Desenvolvimento").
-    -   **Políticas de Controle de Serviço (SCPs - Service Control Policies):** A funcionalidade mais poderosa. SCPs são "guardrails" que restringem as permissões que podem ser usadas nas contas-membro, mesmo para o usuário `root` da conta. Ex: "Ninguém na OU de Desenvolvimento pode lançar instâncias EC2 do tipo `large` ou superior".
+## 4. AWS Trusted Advisor
 
--   **AWS Control Tower:**
-    -   É um serviço que automatiza a configuração de um ambiente AWS seguro e com várias contas, chamado de "landing zone".
-    -   Ele usa outros serviços por baixo dos panos (como Organizations, IAM, Config) para aplicar as melhores práticas da AWS de forma automatizada.
-    -   **Guardrails:** Implementa regras de alto nível para governança (ex: "detectar desvio de configuração", "proibir alterações em regras do CloudTrail").
-
-## 5. Amazon QuickSight
-
-O Amazon QuickSight é um serviço de Business Intelligence (BI) escalável, serverless, e totalmente gerenciado que permite visualizar dados e criar dashboards interativos. Ele se integra nativamente com os serviços da AWS, facilitando a análise de dados armazenados na nuvem.
-
--   **Principais Casos de Uso:**
-    -   **Análise de Negócios:** Criar painéis para acompanhar KPIs (Key Performance Indicators), métricas de vendas, e performance operacional.
-    -   **Visualização de Dados:** Transformar grandes volumes de dados brutos (ex: de logs do CloudTrail, dados de custos e uso da AWS, ou dados de aplicações) em gráficos e tabelas fáceis de entender.
-    -   **BI Embarcado (Embedded Analytics):** Incorporar dashboards do QuickSight diretamente em suas aplicações, portais e websites, oferecendo análises ricas para seus usuários finais.
--   **Motor de Análise (SPICE):** O QuickSight utiliza o SPICE (Super-fast, Parallel, In-memory Calculation Engine), um motor de cálculo em memória que otimiza as consultas para uma performance rápida, mesmo com grandes conjuntos de dados.
-
-```
+-   **O que é:** Um serviço de orientação em tempo real que ajuda a seguir as melhores práticas da AWS. Ele inspeciona seu ambiente AWS e faz recomendações.
+-   **Cinco Pilares:**
+    1.  **Otimização de Custos:** Identifica recursos ociosos (ex: instâncias EC2 com baixa utilização, Elastic IPs não associados).
+    2.  **Performance:** Verifica a utilização de serviços para garantir alta performance (ex: snapshots de EBS antigos).
+    3.  **Segurança:** Recomendações para melhorar a segurança (ex: buckets S3 com acesso público, falta de MFA no usuário root).
+    4.  **Tolerância a Falhas:** Sugestões para aumentar a resiliência (ex: implantações RDS não Multi-AZ, falta de backups).
+    5.  **Limites de Serviço (Service Quotas):** Verifica o uso em relação aos limites da conta.
+-   **Níveis de Acesso:** O plano Basic Support (gratuito) oferece acesso a verificações de segurança e limites de serviço. Planos pagos (Developer, Business, Enterprise) oferecem acesso a todas as verificações.

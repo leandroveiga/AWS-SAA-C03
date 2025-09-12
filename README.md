@@ -30,8 +30,13 @@ O objetivo principal deste repositório é fornecer a você uma estrutura organi
 |          [Segurança na Cloud](./aws_saa_c03/conteudo_md/assuntos/seguranca_na_cloud.md)  &#x2611;           | &check;            |
 | [Monitoramento e Governança](./aws_saa_c03/conteudo_md/assuntos/monitoramento_governanca.md)  &#x2611; | &check;            |
 | [Migração e Transferência de Dados](./aws_saa_c03/conteudo_md/assuntos/migracao_transferencia_dados.md)  &#x2611; | &check;            |
+| [Análise de Dados](./aws_saa_c03/conteudo_md/assuntos/analise_de_dados.md)  &#x2611; | &check;            |
 | [Contêineres na AWS (ECS, EKS, Fargate, ECR)](./aws_saa_c03/conteudo_md/assuntos/containers_aws.md)  &#x2611; | &check;            |
 | [Serviços Avançados e DR](./aws_saa_c03/conteudo_md/assuntos/servicos_avancados_e_dr.md)  &#x2611; | &check;            |
+| [Conectividade de Rede](./aws_saa_c03/conteudo_md/assuntos/conectividade.md)  &#x2611; | &check;            |
+| [Step Functions](./aws_saa_c03/conteudo_md/assuntos/step_functions.md)  &#x2611; | &check;            |
+| [Custos e Governança](./aws_saa_c03/conteudo_md/assuntos/custos_governanca.md)  &#x2611; | &check;            |
+| [Machine Learning](./aws_saa_c03/conteudo_md/assuntos/machine_learning.md)  &#x2611; | &check;            |
 
 
 Neste documento, você encontrará um resumo das principais informações sobre a certificação AWS Solutions Architect Associate, incluindo tópicos abordados e dicas de estudo.

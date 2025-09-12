@@ -24,22 +24,32 @@ O AWS Systems Manager (SSM) é o centro de operações da AWS, fornecendo uma in
     -   **O que é:** Automatiza o processo de aplicação de patches em grandes grupos de instâncias EC2 ou on-premises para atualizações de segurança e outras.
     -   **Como funciona:** Você pode definir janelas de manutenção e "baselines" de patches (regras para aprovação automática de patches) para garantir que seus sistemas estejam sempre atualizados.
 
+-   **Run Command:**
+    -   **O que é:** Permite executar comandos remotamente em suas instâncias de forma segura e em escala, sem a necessidade de login via SSH ou RDP.
+    -   **Caso de uso:** Instalar software, executar scripts ou aplicar configurações em um grande número de instâncias simultaneamente.
+
+---
+
 ## 2. AWS Secrets Manager
 
-O AWS Secrets Manager é um serviço dedicado ao gerenciamento de segredos. Embora o SSM Parameter Store possa armazenar segredos, o Secrets Manager oferece funcionalidades mais avançadas.
+O AWS Secrets Manager é um serviço dedicado a proteger e gerenciar segredos, como senhas de banco de dados, chaves de API e outras credenciais.
 
-### Secrets Manager vs. SSM Parameter Store (SecureStrings)
+-   **Principais Funcionalidades:**
+    -   **Rotação Automática de Segredos:** A principal vantagem sobre o SSM Parameter Store. O Secrets Manager pode rotacionar segredos automaticamente e de forma nativa para serviços como Amazon RDS, Redshift e DocumentDB. Isso aumenta significativamente a postura de segurança.
+    -   **Criptografia:** Os segredos são sempre criptografados em repouso usando o AWS KMS.
+    -   **Controle de Acesso:** O acesso aos segredos é controlado por políticas do IAM.
+    -   **Auditoria:** Acesso aos segredos é logado no AWS CloudTrail.
 
-| Característica | AWS Secrets Manager | SSM Parameter Store (SecureStrings) |
-| :--- | :--- | :--- |
-| **Rotação Automática de Segredos** | **Sim.** Pode rotacionar automaticamente credenciais para serviços suportados (como RDS, Redshift, DocumentDB) usando funções Lambda. | **Não.** A rotação precisa ser implementada manualmente. |
-| **Geração de Segredos** | Pode gerar senhas aleatórias com requisitos de complexidade. | Não. |
-| **Custo** | **Pago.** Custo por segredo por mês e por chamada de API. | **Gratuito** (camada padrão). |
-| **Integração com RDS** | Integração nativa para rotação de credenciais de banco de dados. | Não possui integração nativa para rotação. |
+-   **Secrets Manager vs. SSM Parameter Store (SecureStrings):**
+    -   **Custo:** O Secrets Manager é um serviço pago por segredo por mês e por chamada de API, enquanto o SSM Parameter Store Standard é gratuito e o Advanced tem um custo menor.
+    -   **Rotação de Segredos:** O Secrets Manager oferece rotação automática nativa. No SSM, a rotação precisa ser implementada de forma personalizada (geralmente com funções Lambda).
+    -   **Quando usar qual:**
+        -   Use **AWS Secrets Manager** quando precisar de rotação automática de credenciais, especialmente para bancos de dados AWS.
+        -   Use **SSM Parameter Store** para armazenar dados de configuração, strings de conexão e segredos que não requerem rotação automática frequente, sendo uma opção mais econômica.
 
-**Quando usar qual?**
--   Use **AWS Secrets Manager** quando precisar de rotação automática de credenciais, especialmente para bancos de dados.
--   Use **SSM Parameter Store** para armazenar dados de configuração e segredos que não exigem rotação automática, sendo uma solução mais econômica.
+-   **Caso de Uso:** Armazenar a senha de um banco de dados Amazon RDS e configurá-la para ser rotacionada automaticamente a cada 30 dias, sem intervenção manual e sem que a aplicação precise ser reiniciada.
+
+---
 
 ## 3. Estratégias de Recuperação de Desastres (DR) na AWS
 
