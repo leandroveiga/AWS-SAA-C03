@@ -67,3 +67,15 @@ O AWS Config é um serviço que permite acessar, auditar e avaliar as configura�
     -   É um serviço que automatiza a configuração de um ambiente AWS seguro e com várias contas, chamado de "landing zone".
     -   Ele usa outros serviços por baixo dos panos (como Organizations, IAM, Config) para aplicar as melhores práticas da AWS de forma automatizada.
     -   **Guardrails:** Implementa regras de alto nível para governança (ex: "detectar desvio de configuração", "proibir alterações em regras do CloudTrail").
+
+## 5. Amazon QuickSight
+
+O Amazon QuickSight é um serviço de Business Intelligence (BI) escalável, serverless, e totalmente gerenciado que permite visualizar dados e criar dashboards interativos. Ele se integra nativamente com os serviços da AWS, facilitando a análise de dados armazenados na nuvem.
+
+-   **Principais Casos de Uso:**
+    -   **Análise de Negócios:** Criar painéis para acompanhar KPIs (Key Performance Indicators), métricas de vendas, e performance operacional.
+    -   **Visualização de Dados:** Transformar grandes volumes de dados brutos (ex: de logs do CloudTrail, dados de custos e uso da AWS, ou dados de aplicações) em gráficos e tabelas fáceis de entender.
+    -   **BI Embarcado (Embedded Analytics):** Incorporar dashboards do QuickSight diretamente em suas aplicações, portais e websites, oferecendo análises ricas para seus usuários finais.
+-   **Motor de Análise (SPICE):** O QuickSight utiliza o SPICE (Super-fast, Parallel, In-memory Calculation Engine), um motor de cálculo em memória que otimiza as consultas para uma performance rápida, mesmo com grandes conjuntos de dados.
+
+```

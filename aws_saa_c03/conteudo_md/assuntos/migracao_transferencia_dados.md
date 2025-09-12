@@ -101,3 +101,33 @@ O Amazon Kinesis é uma família de serviços projetada para coletar, processar 
     -   **Função:** Permite processar e analisar dados de streaming em tempo real usando SQL padrão ou Apache Flink.
     -   **Como funciona:** Você pode executar consultas SQL contínuas sobre os dados em um Kinesis Data Stream ou Kinesis Data Firehose para filtrar, transformar e agregar os dados em tempo real.
     -   **Caso de uso:** Criar painéis de análise em tempo real, gerar alertas baseados em métricas de streaming e realizar análises de séries temporais.
+
+## 6. AWS Glue
+
+O AWS Glue é um serviço de extração, transformação e carga (ETL) totalmente gerenciado que facilita a preparação e o carregamento de dados para análise. Ele é "serverless", o que significa que não há infraestrutura para gerenciar.
+
+-   **Principais Componentes:**
+    -   **Data Catalog:** É um repositório de metadados centralizado. O Glue pode usar "crawlers" para descobrir automaticamente seus dados em serviços como Amazon S3, Amazon RDS e DynamoDB, inferir seus esquemas e popular o Data Catalog. Este catálogo pode então ser usado por outros serviços como Amazon Athena, Amazon Redshift Spectrum e Amazon EMR.
+    -   **Jobs ETL:** O Glue gera automaticamente código Python ou Scala (usando Apache Spark) para seus trabalhos de ETL, que você pode customizar. Esses trabalhos podem ser agendados, acionados por eventos ou executados sob demanda para transformar e mover dados.
+    -   **Glue DataBrew:** É uma ferramenta de preparação de dados visual que permite limpar e normalizar dados sem escrever código. É ideal para analistas de dados e cientistas de dados.
+
+-   **Casos de Uso:**
+    -   **ETL para Data Lakes:** O caso de uso mais comum é extrair dados de várias fontes, transformá-los em um formato otimizado (como Apache Parquet) e carregá-los em um data lake no Amazon S3.
+    -   **Descoberta de Dados:** Usar crawlers para manter um catálogo atualizado de todos os seus ativos de dados.
+    -   **Limpeza e Preparação de Dados:** Usar o DataBrew para preparar dados para análise e machine learning.
+
+## 7. Amazon Athena
+
+O Amazon Athena é um serviço de consulta interativo e serverless que permite analisar dados armazenados no Amazon S3 usando SQL padrão. Com o Athena, não há necessidade de carregar seus dados em um banco de dados; você pode consultá-los diretamente onde estão.
+
+-   **Principais Características:**
+    -   **Serverless:** Não há servidores para provisionar ou gerenciar. O Athena cuida de tudo automaticamente.
+    -   **Pagamento por Consulta:** Você paga apenas pelas consultas que executa, com base na quantidade de dados escaneados pela consulta.
+    -   **Integração com AWS Glue:** O Athena usa o AWS Glue Data Catalog para armazenar metadados (como esquemas de tabelas) sobre os dados no S3. Quando um crawler do Glue cataloga seus dados, você pode consultá-los imediatamente no Athena.
+    -   **Formatos de Dados:** Suporta uma variedade de formatos de dados, incluindo CSV, JSON, ORC, Avro e Parquet. O uso de formatos colunares (como Parquet e ORC) e a compressão de dados podem otimizar significativamente a performance e reduzir os custos das consultas.
+
+-   **Casos de Uso:**
+    -   **Análise de Logs:** Executar consultas ad-hoc em logs de aplicações, logs de acesso a load balancers ou logs do CloudTrail armazenados no S3.
+    -   **Querying de Data Lakes:** Servir como a principal ferramenta de SQL para analistas de negócios e cientistas de dados que precisam explorar o data lake da empresa.
+    -   **Fonte de Dados para BI:** Conectar ferramentas de Business Intelligence, como o Amazon QuickSight, ao Athena para criar dashboards e visualizações a partir de dados no S3.
+```
