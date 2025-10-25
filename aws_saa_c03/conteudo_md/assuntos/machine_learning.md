@@ -1,5 +1,7 @@
 # Machine Learning na AWS
 
+**Serviços Cobertos:** Comprehend, Rekognition, Transcribe, SageMaker.
+
 A AWS oferece um conjunto de serviços de Inteligência Artificial (IA) e Machine Learning (ML) que permitem aos desenvolvedores adicionar inteligência a aplicações sem a necessidade de ter um conhecimento profundo em ML. Esses serviços podem ser divididos em duas categorias principais: serviços de IA de alto nível (modelos pré-treinados) e a plataforma SageMaker (para construção de modelos personalizados).
 
 ---

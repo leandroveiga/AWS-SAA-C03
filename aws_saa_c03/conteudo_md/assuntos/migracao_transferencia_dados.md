@@ -1,5 +1,7 @@
 # Migração e Transferência de Dados na AWS
 
+**Serviços Cobertos:** Snow Family (Snowcone, Snowball Edge, Snowmobile), Storage Gateway (S3 File, Tape, Volume), DataSync, Database Migration Service (DMS), AppFlow.
+
 A AWS oferece um portfólio abrangente de serviços para ajudar a migrar dados, bancos de dados, aplicações e até mesmo servidores inteiros do seu ambiente on-premises para a nuvem, ou entre diferentes regiões da AWS. A escolha do serviço correto depende do volume de dados, da velocidade da sua conexão de rede e da natureza da migração (online vs. offline).
 
 ## Categorias de Serviços de Migração

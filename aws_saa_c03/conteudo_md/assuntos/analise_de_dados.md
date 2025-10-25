@@ -1,5 +1,7 @@
 # Análise de Dados na AWS
 
+**Serviços Cobertos:** Kinesis (Data Streams, Firehose, Data Analytics), Athena, Glue (Data Catalog, Jobs, DataBrew), OpenSearch Service, QuickSight.
+
 A AWS oferece um conjunto poderoso de serviços para coletar, processar, analisar e visualizar dados em tempo real e em lote. Esses serviços são fundamentais para a construção de data lakes, pipelines de análise e aplicações orientadas a dados.
 
 ---
